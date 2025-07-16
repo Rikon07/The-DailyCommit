@@ -11,7 +11,7 @@ const headlines = [
   "Code Smarter, Read Faster",
   "Push Knowledge. Pull Headlines.",
   "Your Daily Dose of Developer News",
-  "Articles Written by Developers, for Developers",
+  "Articles Written by Devs, for Devs",
   "Explore Open Source Stories",
   "Daily Commits from Global Devs",
 ];
@@ -50,9 +50,10 @@ const Banner = () => {
       {/* Background Image */}
       <div className="absolute inset-0">
         <img
-          src="https://i.pinimg.com/originals/99/f9/5e/99f95ee41c3def28268cc3877f103daf.gif"
+          src="https://i.pinimg.com/originals/68/0b/eb/680beb29a683b6624393df56ac23e9bf.gif"
+        //   https://i.pinimg.com/originals/86/e9/db/86e9db1eba21c663ccd6ee49a146503f.gif
           alt="News background"
-          className="w-full h-full object-cover object-center opacity-20"
+          className="w-full h-full object-cover object-center opacity-60"
         />
         <div className="absolute inset-0 bg-white/60 dark:bg-[#0F172A]/80 backdrop-blur-sm"></div>
       </div>
@@ -80,6 +81,9 @@ const Banner = () => {
                       "open",
                       "source",
                       "global",
+                      "read",
+                      "knowledge.",
+                      "devs"
                     ].includes(word.toLowerCase()),
                   })}
                 >
@@ -117,7 +121,7 @@ const Banner = () => {
         <div className="mt-8 flex justify-center">
           <button
             onClick={scrollToSection}
-            className="bg-[#38BDF8] hover:bg-[#0EA5E9] text-white px-8 py-3 rounded-full font-medium shadow transition"
+            className="bg-[#38BDF8] hover:bg-[#0EA5E9] text-white text-sm px-8 py-2 rounded-full sfpro shadow transition"
           >
             🔍 Discover
           </button>

@@ -79,7 +79,7 @@ const Navbar = () => {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
-      className={`cabin fixed z-50 top-0 left-1/2 -translate-x-1/2 w-full px-6 md:px-10 lg:px-14 xl:px-50 py-4 rounded-lg shadow-md flex items-center justify-between transition-all duration-300 ${
+      className={`cabin fixed z-50 top-0 left-1/2 -translate-x-1/2 w-full px-6 md:px-10 lg:px-14 xl:px-50 py-4 rounded-lg shadow-xl flex items-center justify-between transition-all duration-300 ${
         scrolled
           ? "bg-[#D0E7F9]/20 dark:bg-[#0F172A]/20 backdrop-blur-xl"
           : "bg-[#D0E7F9]/30 dark:bg-[#0F172A]/30"
@@ -91,7 +91,7 @@ const Navbar = () => {
         className="text-2xl font-bold flex items-center gap-1 ciga tracking-wide text-[#0F172A] dark:text-[#38BDF8] transition"
       >
         <span className="drop-shadow-sm dark:drop-shadow-[0_0_10px_#38BDF8] flex gap-2 items-center">
-          <span className="text-lg">The</span> <span>DailyCommit</span>
+          <span className="text-lg">The</span> <span>Daily<span className="text-[#38BDF8] dark:text-white">Commit</span></span>
         </span>
       </Link>
 
@@ -106,12 +106,12 @@ const Navbar = () => {
         {!user ? (
           <>
             <Link to="/login">
-              <button className="bg-[#38BDF8] text-[#0F172A] px-5 py-2 rounded-xl font-semibold hover:scale-105 hover:bg-[#0EA5E9] hover:text-white transition-all duration-200 shadow-sm">
+              <button className="bg-[#38BDF8] text-[#0F172A] px-5 py-2 rounded-xl font-semibold hover:scale-105 hover:bg-[#0EA5E9] hover:text-white transition-all duration-200 shadow-sm text-sm">
                 Login
               </button>
             </Link>
             <Link to="/register">
-              <button className="border border-[#38BDF8] text-[#38BDF8] px-5 py-2 rounded-xl font-semibold hover:bg-[#38BDF8] hover:text-[#0F172A] transition-all duration-200 shadow-sm">
+              <button className="border border-[#38BDF8] text-[#38BDF8] px-5 py-2 rounded-xl font-semibold hover:bg-[#38BDF8] hover:text-[#0F172A] transition-all duration-200 shadow-sm text-sm">
                 Register
               </button>
             </Link>

@@ -1,11 +1,135 @@
-import React from 'react';
+import { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom";
+import { FaArrowDown } from "react-icons/fa6";
+import clsx from "clsx";
+import { Typewriter } from "react-simple-typewriter";
+import gsap from "gsap";
+
+const headlines = [
+  "Stay Ahead With Dev News",
+  "Code Smarter, Read Faster",
+  "Push Knowledge. Pull Headlines.",
+  "Your Daily Dose of Developer News",
+  "Articles Written by Developers, for Developers",
+  "Explore Open Source Stories",
+  "Daily Commits from Global Devs",
+];
 
 const Banner = () => {
-    return (
-        <div>
-            Banner
-        </div>
+  const [index, setIndex] = useState(0);
+  const bannerRef = useRef(null);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % headlines.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    gsap.fromTo(
+      bannerRef.current,
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 1.5, ease: "power2.out" }
     );
+  }, []);
+
+  const scrollToSection = () => {
+    const nextSection = document.getElementById("news-section");
+    if (nextSection) {
+      nextSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  return (
+    <section
+      ref={bannerRef}
+      className="relative w-full min-h-[90vh] flex flex-col justify-center items-center text-center overflow-hidden"
+    >
+      {/* Background Image */}
+      <div className="absolute inset-0">
+        <img
+          src="https://i.pinimg.com/originals/99/f9/5e/99f95ee41c3def28268cc3877f103daf.gif"
+          alt="News background"
+          className="w-full h-full object-cover object-center opacity-20"
+        />
+        <div className="absolute inset-0 bg-white/60 dark:bg-[#0F172A]/80 backdrop-blur-sm"></div>
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 max-w-7xl px-4">
+        {/* Rotating Headline */}
+        <div className="text-4xl sm:text-5xl md:text-6xl font-light cabin leading-tight text-[#0F172A]/80 dark:text-white h-[100px] flex items-center justify-center">
+          <AnimatePresence mode="wait">
+            <motion.h1
+              key={headlines[index]}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+              className="transition-all duration-300"
+            >
+              {headlines[index].split(" ").map((word, i) => (
+                <span
+                  key={i}
+                  className={clsx("inline-block", {
+                    "text-[#38BDF8]": [
+                      "news",
+                      "developers",
+                      "open",
+                      "source",
+                      "global",
+                    ].includes(word.toLowerCase()),
+                  })}
+                >
+                  {word} {" "}
+                </span>
+              ))}
+            </motion.h1>
+          </AnimatePresence>
+        </div>
+
+        {/* Typewriter Extra Line */}
+        <div className="mt-4 text-lg sm:text-xl md:text-2xl font-light text-[#475569] dark:text-[#CBD5E1]">
+          <Typewriter
+            words={[
+              "Powered by Devs, Loved by Readers",
+              "One Platform. Infinite Commits.",
+              "Where Code Meets Community",
+            ]}
+            loop={true}
+            cursor
+            cursorStyle="_"
+            typeSpeed={60}
+            deleteSpeed={40}
+            delaySpeed={2000}
+          />
+        </div>
+
+        {/* Description */}
+        <p className="mt-6 text-base sm:text-lg text-[#334155] dark:text-[#94A3B8] max-w-xl mx-auto font-light">
+          The Daily Commit brings you real-time dev news, open-source stories,
+          and developer-driven insights from around the globe — every single day.
+        </p>
+
+        {/* Button */}
+        <div className="mt-8 flex justify-center">
+          <button
+            onClick={scrollToSection}
+            className="bg-[#38BDF8] hover:bg-[#0EA5E9] text-white px-8 py-3 rounded-full font-medium shadow transition"
+          >
+            🔍 Discover
+          </button>
+        </div>
+      </div>
+
+      {/* Scroll Icon */}
+      <div className="absolute bottom-8 z-10 cursor-pointer" onClick={scrollToSection}>
+        <FaArrowDown className="text-[#38BDF8] animate-bounce text-xl" />
+      </div>
+    </section>
+  );
 };
 
 export default Banner;

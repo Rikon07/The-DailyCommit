@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400..700;1,400..700&display=swap');
+
 @import "tailwindcss";
 @plugin "daisyui";
 
@@ -10,4 +12,56 @@
     body{
         @apply bg-white/80 dark:bg-gray-900 dark:text-gray-100;
     }
+}
+
+.cabin{
+    font-family: "Cabin", sans-serif;
+}
+
+button{
+    cursor: pointer;
+}
+
+@font-face {
+  font-family: 'Odena Glamour';
+  src: url('./assets/Fonts/OdenaGlamour-BF6625f66aead7f.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Ciguatera';
+  src: url('./assets/Font/ciguatera.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SF Pro';
+  src: url('./assets/Font/SFPRODISPLAYREGULAR.OTF') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Eirene Sans', sans-serif;
+  src: url('./assets/Font/EireneSans-Regular.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.odena{
+    font-family: 'Odena Glamour';
+}
+
+.sfpro{
+    font-family: 'SF Pro';
+}
+
+.ciga{
+    font-family: 'Ciguatera';
+}
+
+.eirene{
+    font-family: 'Eirene Sans', sans-serif;
 }

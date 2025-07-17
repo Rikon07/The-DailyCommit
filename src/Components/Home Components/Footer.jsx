@@ -4,8 +4,8 @@ import { motion } from "framer-motion";
 
 const Footer = () => {
   return (
-    <footer className="bg-gradient-to-t from-white/30 via-[#1E293B]/20 to-white/30 dark:from-[#0F172A] dark:via-[#1E293B] dark:to-[#0F172A] transition-colors duration-500">
-      <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-10">
+    <footer className="bg-gradient-to-t from-white/30 via-[#1E293B]/20 to-white/30 dark:from-[#0F172A] dark:via-[#01202e] dark:to-[#0F172A] transition-colors duration-500">
+      <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
 
         {/* Logo + Description */}
         <motion.div 

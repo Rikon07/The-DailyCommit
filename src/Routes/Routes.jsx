@@ -3,8 +3,10 @@ import MainLayout from "../Layouts/MainLayout";
 import Error from "../Components/Extra Components/Error";
 import Home from "../Pages/Home pages/Home";
 import AuthLayout from "../Layouts/AuthLayout";
-import Login from "../Pages/Authentication Pages/Login";
+import Login from '../Pages/Authentication Pages/Login';
 import Register from "../Pages/Authentication Pages/Register";
+import PrivateRoute from "../Providers/Private";
+import Profile from "../Pages/Authentication Pages/Profile";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -15,21 +17,27 @@ const router = createBrowserRouter([
         index: true,
         Component: Home
       },
+      {
+        path: "/profile",
+        Component: () => (
+          <PrivateRoute>
+            <Profile />
+          </PrivateRoute>
+        ),
+      },
     ],
-    
   },
   {
-    path: '/auth',
+    path: '/',
     Component: AuthLayout,
-    errorElement: <Error />,
     children: [
       {
-        path: 'login',
-        Component: <Login />
+        path: '/login',
+        Component: Login
       },
       {
         path: 'register',
-        Component: <Register />
+        Component: Register
       }
     ]
   }

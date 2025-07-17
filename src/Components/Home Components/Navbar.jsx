@@ -4,13 +4,43 @@ import { FaUserCircle } from "react-icons/fa";
 import ThemeToggle from "../Extra Components/ThemeToggle";
 import { motion, AnimatePresence } from "framer-motion";
 import Swal from "sweetalert2";
+import useAuth from "../../Hooks/UseAuth";
 
 const Navbar = () => {
-  const user = null;
+  // const user = null;
+  const { user, logOut } = useAuth();
   const location = useLocation();
 
   const [scrolled, setScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleLogOut = () => {
+    logOut()
+      .then(() => {
+        Swal.fire({
+          title: "Logged Out",
+          text: "You have been logged out successfully!",
+          icon: "success",
+          background: theme === "dark" ? "#223A5E" : "#D0E7F9",
+          color: theme === "dark" ? "#90D1CA" : "#096B68",
+          confirmButtonColor: "#4FD1C5",
+          confirmButtonText: "OK",
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+        Swal.fire({
+          title: "Logout Failed",
+          text: "Something went wrong while logging out.",
+          icon: "error",
+          background: theme === "dark" ? "#223A5E" : "#D0E7F9",
+          color: theme === "dark" ? "#90D1CA" : "#096B68",
+          confirmButtonColor: "#4FD1C5",
+          confirmButtonText: "Try Again",
+        });
+      });
+  };
+  ("");
 
   const [theme, setTheme] = useState("");
   useEffect(() => {
@@ -117,7 +147,43 @@ const Navbar = () => {
             </Link>
           </>
         ) : (
-          <FaUserCircle className="text-3xl text-[#38BDF8]" />
+          <div className="dropdown dropdown-end dropdown-hover">
+            <div tabIndex={0} role="button" className="cursor-pointer">
+              {user.photoURL ? (
+                <img
+                  src={user.photoURL}
+                  alt="User"
+                  className="w-10 h-10 rounded-full border-2 border-[#38BDF8]"
+                />
+              ) : (
+                <FaUserCircle className="text-3xl text-[#38BDF8]" />
+              )}
+            </div>
+            <ul
+              tabIndex={0}
+              className="dropdown-content menu p-3 space-y-1 bg-[#D0E7F9] dark:bg-[#1d314f] shadow-md rounded-xl w-52 z-50"
+            >
+              <li className="px-4 py-2 text-[#223A5E] hover:text-[#D0E7F9] dark:text-[#D0E7F9] dark:hover:text-[#223A5E] font-medium rounded-xl hover:bg-[#223A5E] dark:hover:bg-[#D0E7F9]">
+                {user.displayName || "User"}
+              </li>
+              <li>
+                <Link
+                  to="/profile"
+                  className="px-4 py-2 hover:text-[#38BDF8] rounded-xl hover:underline hover:bg-[#223A5E] dark:hover:bg-[#D0E7F9] transition"
+                >
+                  My Profile
+                </Link>
+              </li>
+              <li className="px-1 py-2">
+                <button
+                  onClick={handleLogOut}
+                  className="text-sm text-left px-3 py-1 rounded-xl  text-[#223A5E] hover:text-[#D0E7F9] dark:text-[#D0E7F9] dark:hover:text-[#223A5E] border border-[#38BDF8] hover:bg-[#223A5E] dark:hover:bg-[#D0E7F9] transition"
+                >
+                  Logout
+                </button>
+              </li>
+            </ul>
+          </div>
         )}
       </div>
 

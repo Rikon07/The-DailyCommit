@@ -11,8 +11,7 @@ import {
   signOut,
   updateProfile,
 } from "firebase/auth";
-
-import Loader from "../Components/Main Components/Loader";
+import Loader from "../Components/Extra Components/Loader";
 import app from "../Firebase/firebase.config";
 import { AuthContext } from "./Contexts";
 

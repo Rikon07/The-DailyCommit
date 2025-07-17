@@ -50,7 +50,8 @@ const Banner = () => {
       {/* Background Image */}
       <div className="absolute inset-0">
         <img
-          src="https://i.pinimg.com/originals/68/0b/eb/680beb29a683b6624393df56ac23e9bf.gif"
+          src='https://i.pinimg.com/originals/6a/e0/9d/6ae09d56f3894692b0c0c735a9882916.gif'
+          // src="https://i.pinimg.com/originals/68/0b/eb/680beb29a683b6624393df56ac23e9bf.gif"
         //   https://i.pinimg.com/originals/86/e9/db/86e9db1eba21c663ccd6ee49a146503f.gif
           alt="News background"
           className="w-full h-full object-cover object-center opacity-60"

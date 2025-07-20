@@ -3,13 +3,17 @@ import MainLayout from "../Layouts/MainLayout";
 import Error from "../Components/Extra Components/Error";
 import Home from "../Pages/Home pages/Home";
 import AuthLayout from "../Layouts/AuthLayout";
-import Login from '../Pages/Authentication Pages/Login';
+import Login from "../Pages/Authentication Pages/Login";
 import Register from "../Pages/Authentication Pages/Register";
 import PrivateRoute from "../Providers/Private";
 import Profile from "../Pages/Authentication Pages/Profile";
 import Dashboard from "../Layouts/Dashboard";
 import AddArticles from "../Pages/Home pages/AddArticles";
 import Subscription from "../Pages/Home pages/Subscription";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 const router = createBrowserRouter([
   {
     path: "/",
@@ -18,7 +22,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        Component: Home
+        Component: Home,
       },
       {
         path: "/profile",
@@ -38,46 +42,48 @@ const router = createBrowserRouter([
       },
       {
         path: "/subscription",
-        Component: () => (
+        element: (
           <PrivateRoute>
+            <Elements stripe={stripePromise}>
             <Subscription />
+          </Elements>
           </PrivateRoute>
         ),
       },
+      // {
+      //   path: "/payment",
+      //   Component: () => (
+      //     <PrivateRoute>
+      //       <Payment />
+      //     </PrivateRoute>
+      //   ),
+      // },
+    ],
+  },
+  {
+    path: "/",
+    Component: AuthLayout,
+    children: [
       {
-        path: "/payment",
-        Component: () => (
-          <PrivateRoute>
-            <Payment />
-          </PrivateRoute>
-        ),
+        path: "/login",
+        Component: Login,
+      },
+      {
+        path: "register",
+        Component: Register,
       },
     ],
   },
   {
-    path: '/',
-    Component: AuthLayout,
-    children: [
-      {
-        path: '/login',
-        Component: Login
-      },
-      {
-        path: 'register',
-        Component: Register
-      }
-    ]
+    path: "/dashboard",
+    Component: () => (
+      <PrivateRoute>
+        <AdminRoute>
+          <Dashboard />
+        </AdminRoute>
+      </PrivateRoute>
+    ),
   },
-  {
-  path: '/dashboard',
-  Component: () => (
-    <PrivateRoute>
-      <AdminRoute>
-        <Dashboard />
-      </AdminRoute>
-    </PrivateRoute>
-    )
-  }
 ]);
 
 export default router;

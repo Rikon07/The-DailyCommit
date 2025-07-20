@@ -22,12 +22,25 @@ const saveUserToDB = async (user) => {
       photo: user.photoURL,
       role: 'user',
       type: 'normal',
+      premiumTaken: null,
     });
   } catch (error) {
     console.error('Error saving user:', error.message);
   }
 };
 
+  const checkAndExpirePremium = async (email) => {
+  try {
+    const userRes = await axios.get(`http://localhost:3000/users/${email}`);
+    const premiumTaken = userRes.data.premiumTaken;
+    if (premiumTaken && new Date() > new Date(premiumTaken)) {
+      // Premium expired, update in DB
+      await axios.patch(`http://localhost:3000/users/premium/${email}`, { premiumTaken: null });
+    }
+  } catch (err) {
+    console.error("Error checking premium expiry:", err);
+  }
+};
 
   const showAlert = (title, text, icon) => {
     Swal.fire({
@@ -50,6 +63,7 @@ const saveUserToDB = async (user) => {
     try {
       const result = await signIn(email, password);
       await saveUserToDB(result.user);
+      await checkAndExpirePremium(result.user.email);
       showAlert("Welcome Back!", `Logged in as ${result.user.displayName}`, "success");
       navigate(location.state?.from || "/", { replace: true });
     } catch (err) {
@@ -70,6 +84,7 @@ const saveUserToDB = async (user) => {
     try {
       const result = await googleSignIn();
       await saveUserToDB(result.user);
+      await checkAndExpirePremium(result.user.email);
       showAlert("Welcome!", `Logged in as ${result.user.displayName}`, "success");
       navigate(location.state?.from || "/", { replace: true });
     } catch (error) {

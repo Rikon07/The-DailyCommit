@@ -1,10 +1,9 @@
 import { useState } from "react";
+import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
-import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../Hooks/UseAuth";
-import { motion } from "framer-motion";
-import { FaCrown } from "react-icons/fa6";
+import Swal from "sweetalert2";
 
 const periods = [
   { label: "1 Minute", value: 1, price: 1 },
@@ -14,94 +13,119 @@ const periods = [
 
 const Subscription = () => {
   const [selected, setSelected] = useState(periods[0]);
+  const [processing, setProcessing] = useState(false);
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const stripe = useStripe();
+  const elements = useElements();
 
-  const handleSubscribe = async () => {
-    const now = new Date();
-    const expiry = new Date(now.getTime() + selected.value * 60 * 1000); // value in minutes
-    try {
-      await axiosSecure.patch(`/users/premium/${user.email}`, { premiumTaken: expiry.toISOString() });
-      toast.success("Subscription successful!");
-      navigate("/payment");
-    } catch (err) {
-      toast.error("Subscription failed!");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setProcessing(true);
+
+    const { data } = await axiosSecure.post("/create-payment-intent", {
+      price: selected.price,
+    });
+
+    const card = elements.getElement(CardElement);
+    const { paymentIntent, error } = await stripe.confirmCardPayment(data.clientSecret, {
+      payment_method: { card },
+    });
+
+    if (error) {
+      Swal.fire({
+        title: "Payment Failed",
+        text: error.message,
+        icon: "error",
+        confirmButtonColor: "#38BDF8",
+        background: "#D0E7F9",
+        color: "#0F172A",
+      });
+      setProcessing(false);
+      return;
     }
+
+    if (paymentIntent.status === "succeeded") {
+      // 3. Update user to premium
+      const now = new Date();
+      const expiry = new Date(now.getTime() + selected.value * 60 * 1000);
+      await axiosSecure.patch(`/users/premium/${user.email}`, { premiumTaken: expiry.toISOString() });
+
+      await Swal.fire({
+        title: "Payment Successful!",
+        text: "You are now a premium user. Enjoy your benefits!",
+        icon: "success",
+        confirmButtonColor: "#38BDF8",
+        background: "#D0E7F9",
+        color: "#0F172A",
+      });
+      navigate("/");
+    }
+    setProcessing(false);
   };
 
   return (
-    <motion.div
-      className="min-h-[68vh] flex flex-col items-center justify-center px-4 py-10 bg-gradient-to-br from-[#D0E7F9]/60 via-[#38BDF8]/10 to-white dark:from-[#0F172A] dark:via-[#1e293b] dark:to-[#0F172A]"
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      {/* Banner */}
-      <motion.div
-        className="w-full max-w-2xl mx-auto flex items-center gap-4 bg-[#38BDF8]/90 dark:bg-[#1e293b]/80 rounded-2xl shadow-lg px-6 py-6 mb-8"
-        initial={{ scale: 0.95 }}
-        animate={{ scale: 1 }}
-        transition={{ duration: 0.4 }}
-      >
-        <FaCrown className="text-yellow-400 text-4xl drop-shadow-lg" />
-        <div>
-          <h2 className="text-2xl md:text-3xl font-bold text-[#0F172A] dark:text-[#D0E7F9]">
-            Upgrade to Premium
-          </h2>
-          <p className="text-[#223A5E] dark:text-[#94A3B8] text-sm md:text-base mt-1">
-            Unlock unlimited articles, premium content, and more!
+    <div className="min-h-[68vh] flex items-center justify-center bg-gradient-to-br from-[#D0E7F9] via-[#38BDF8]/30 to-white dark:from-[#0F172A] dark:via-[#223A5E]/60 dark:to-[#0F172A]">
+      <div className="w-full flex flex-col items-center">
+        {/* Welcoming Text Block */}
+        <div className="w-full max-w-lg mb-6 text-center">
+          <h1 className="text-2xl font-bold text-[#0F172A] dark:text-[#38BDF8] mb-2">
+            Become a Premium Member!
+          </h1>
+          <p className="text-[#223A5E] dark:text-[#D0E7F9] text-base">
+            Unlock unlimited article posting, access exclusive premium content, and enjoy priority support.
+            Choose your subscription period and join our community of passionate developers!
           </p>
         </div>
-      </motion.div>
-
-      {/* Subscription Card */}
-      <motion.div
-        className="w-full max-w-md bg-white dark:bg-[#1e293b] rounded-2xl shadow-xl p-8 flex flex-col gap-6"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.5 }}
-      >
-        <div>
-          <label className="block mb-2 text-[#223A5E] dark:text-[#D0E7F9] font-semibold">
-            Select Subscription Period
-          </label>
+        {/* Subscription Form */}
+        <form
+          onSubmit={handleSubmit}
+          className="bg-[#D0E7F9]/90 dark:bg-[#1e293b]/90 rounded-2xl shadow-xl p-8 w-full max-w-sm flex flex-col gap-6"
+          style={{ backdropFilter: "blur(6px)" }}
+        >
+          <h2 className="text-xl font-bold text-center mb-2 text-[#0F172A] dark:text-[#38BDF8]">
+            Your Card Information
+          </h2>
+          <div className="mb-2">
+            <CardElement
+              options={{
+                style: {
+                  base: {
+                    fontSize: "18px",
+                    color: "#0F172A",
+                    "::placeholder": { color: "#38BDF8" },
+                    backgroundColor: "transparent",
+                  },
+                  invalid: { color: "#e53e3e" },
+                },
+              }}
+              className="p-3 rounded-lg border border-[#38BDF8] bg-white dark:bg-[#223A5E]/40"
+            />
+          </div>
           <select
+            aria-label="Select subscription period"
             value={selected.label}
             onChange={e => setSelected(periods.find(p => p.label === e.target.value))}
-            className="w-full p-3 rounded-lg border border-[#38BDF8] bg-[#D0E7F9]/40 dark:bg-[#0F172A]/60 text-[#223A5E] dark:text-[#D0E7F9] focus:outline-none focus:ring-2 focus:ring-[#38BDF8] transition"
+            className="p-3 rounded-lg border border-[#38BDF8] bg-white dark:bg-[#223A5E]/40 text-[#0F172A] dark:text-[#D0E7F9]"
           >
             {periods.map(period => (
               <option key={period.label} value={period.label}>
-                {period.label} — ${period.price}
+                {period.label} — ৳{period.price * 110}
               </option>
             ))}
           </select>
-        </div>
-
-        {/* Plan Summary */}
-        <div className="flex items-center gap-4 bg-[#D0E7F9]/60 dark:bg-[#223A5E]/40 rounded-lg p-4">
-          <FaCrown className="text-yellow-400 text-2xl" />
-          <div>
-            <div className="font-semibold text-[#0F172A] dark:text-[#D0E7F9]">
-              {selected.label} Premium Access
-            </div>
-            <div className="text-[#475569] dark:text-[#94A3B8] text-sm">
-              Price: <span className="font-bold">${selected.price}</span>
-            </div>
-          </div>
-        </div>
-
-        <motion.button
-          whileHover={{ scale: 1.04 }}
-          whileTap={{ scale: 0.97 }}
-          onClick={handleSubscribe}
-          className="w-full bg-gradient-to-r from-[#38BDF8] to-[#0EA5E9] text-white font-semibold py-3 rounded-lg shadow-md hover:from-[#0EA5E9] hover:to-[#38BDF8] transition-all"
-        >
-          Take Subscription (${selected.price})
-        </motion.button>
-      </motion.div>
-    </motion.div>
+          <button
+            type="submit"
+            disabled={!stripe || processing}
+            className="w-full border-2 border-[#38BDF8] text-[#0F172A] dark:text-[#D0E7F9] font-bold py-2 rounded-lg bg-[#38BDF8]/90 hover:bg-[#0EA5E9] dark:bg-[#223A5E]/80 transition"
+            aria-label="Pay and subscribe"
+          >
+            {processing ? "Processing..." : "PAY"}
+          </button>
+        </form>
+      </div>
+    </div>
   );
 };
 

@@ -20,7 +20,7 @@ const plans = [
   },
   {
     title: "Premium Plan",
-    price: "$4.99/month",
+    price: "৳550/month", // Example: $4.99 * 110 = 549, rounded for BDT
     features: [
       "All Free Features",
       "Write Articles (Pending Approval)",
@@ -30,6 +30,7 @@ const plans = [
     unavailable: [],
     color: "bg-[#D0E7F9] text-[#223A5E] dark:bg-[#1e293b] dark:text-white border border-orange-500",
     buttonColor: "bg-[#38BDF8] text-white",
+    highlight: true,
   },
 ];
 
@@ -47,51 +48,53 @@ const Plans = () => {
         {plans.map((plan, idx) => (
           <div
             key={idx}
-            className={`rounded-2xl shadow-lg p-6 transition hover:scale-[1.01] flex flex-col gap-2 justify-between duration-300 ${plan.color}`}
+            className={`relative rounded-2xl shadow-lg p-6 transition hover:scale-[1.01] flex flex-col gap-2 justify-between duration-300 ${plan.color} ${plan.highlight ? "ring-2 ring-[#38BDF8] ring-offset-2" : ""}`}
           >
+            {plan.highlight && (
+              <span className="absolute top-4 right-4 bg-[#38BDF8] text-white px-3 py-1 rounded-full text-xs font-bold shadow">
+                Most Popular
+              </span>
+            )}
             <div>
-                <h3 className="text-2xl font-semibold mb-1">{plan.title}</h3>
-            <p className="text-lg font-medium mb-3">{plan.price}</p>
+              <h3 className="text-2xl font-semibold mb-1">{plan.title}</h3>
+              <p className="text-lg font-medium mb-3">{plan.price}</p>
 
-            <ul className="space-y-1 mb-6 text-sm">
-              {plan.features.map((feature, index) => (
-                <li key={index} className="flex items-center gap-2">
-                  <Check className="text-green-500" size={20} />
-                  <span>{feature}</span>
-                </li>
-              ))}
+              <ul className="space-y-1 mb-6 text-sm">
+                {plan.features.map((feature, index) => (
+                  <li key={index} className="flex items-center gap-2">
+                    <Check className="text-green-500" size={20} />
+                    <span>{feature}</span>
+                  </li>
+                ))}
 
-              {plan.unavailable.map((feature, index) => (
-                <li key={index} className="flex items-center gap-2 opacity-60 line-through">
-                  <X className="text-red-400" size={20} />
-                  <span>{feature}</span>
-                </li>
-              ))}
-            </ul>
+                {plan.unavailable.map((feature, index) => (
+                  <li key={index} className="flex items-center gap-2 opacity-60 line-through">
+                    <X className="text-red-400" size={20} />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
 
             <div>
-                {/* <button
-              onClick={() => navigate("/subscription")}
-              className={`px-5 py-2 rounded-lg font-semibold hover:brightness-90 transition ${plan.buttonColor}`}
-            >
-              Subscribe Now
-            </button> */}
-            <button
-            onClick={() => navigate("/subscription")} className="group relative inline-flex overflow-hidden rounded-full focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
-      <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-gradient-to-r from-pink-600 via-purple-600 to-[#0F172A]" />
-      <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-[#38BDF8] px-8 py-2 text-sm font-medium backdrop-blur-3xl transition-all duration-300 group-hover:bg-[#0F172A]">
-        <svg stroke="currentColor" viewBox="0 0 24 24" fill="none" className="mr-2 h-5 w-5 text-pink-500 transition-transform duration-300 group-hover:-translate-x-1">
-          <path d="M11 19l-7-7 7-7m8 14l-7-7 7-7" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
-        </svg>
-        <span className="relative bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text  font-semibold text-white/90">
-          Subscribe Now
-        </span>
-        <svg stroke="currentColor" viewBox="0 0 24 24" fill="none" className="ml-2 h-5 w-5 text-blue-500 transition-transform duration-300 group-hover:translate-x-1">
-          <path d="M13 5l7 7-7 7M5 5l7 7-7 7" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
-        </svg>
-      </span>
-    </button>
+              <button
+                aria-label={`Subscribe to ${plan.title}`}
+                onClick={() => navigate("/subscription")}
+                className="group relative inline-flex overflow-hidden rounded-full focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
+              >
+                <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-gradient-to-r from-pink-600 via-purple-600 to-[#0F172A]" />
+                <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-[#38BDF8] px-8 py-2 text-sm font-medium backdrop-blur-3xl transition-all duration-300 group-hover:bg-[#0F172A]">
+                  <svg stroke="currentColor" viewBox="0 0 24 24" fill="none" className="mr-2 h-5 w-5 text-pink-500 transition-transform duration-300 group-hover:-translate-x-1">
+                    <path d="M11 19l-7-7 7-7m8 14l-7-7 7-7" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
+                  </svg>
+                  <span className="relative bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text font-semibold text-white/90">
+                    Subscribe Now
+                  </span>
+                  <svg stroke="currentColor" viewBox="0 0 24 24" fill="none" className="ml-2 h-5 w-5 text-blue-500 transition-transform duration-300 group-hover:translate-x-1">
+                    <path d="M13 5l7 7-7 7M5 5l7 7-7 7" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
+                  </svg>
+                </span>
+              </button>
             </div>
           </div>
         ))}

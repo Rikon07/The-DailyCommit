@@ -66,7 +66,7 @@ const Subscription = () => {
   };
 
   return (
-    <div className="min-h-[68vh] flex items-center justify-center bg-gradient-to-br from-[#D0E7F9] via-[#38BDF8]/30 to-white dark:from-[#0F172A] dark:via-[#223A5E]/60 dark:to-[#0F172A]">
+    <div className="min-h-[68vh] flex items-center justify-center bg-gradient-to-br from-[#D0E7F9] via-[#38BDF8]/30 to-white dark:from-[#0F172A] dark:via-[#223A5E]/60 dark:to-[#0F172A] cabin">
       <div className="w-full flex flex-col items-center">
         {/* Welcoming Text Block */}
         <div className="w-full max-w-lg mb-6 text-center">

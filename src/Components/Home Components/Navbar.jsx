@@ -5,15 +5,34 @@ import ThemeToggle from "../Extra Components/ThemeToggle";
 import { motion, AnimatePresence } from "framer-motion";
 import Swal from "sweetalert2";
 import useAuth from "../../Hooks/UseAuth";
+import useAdmin from "../../Hooks/useAdmin";
+import axios from "../../Hooks/Axios";
+import { Tooltip } from "react-tooltip";
 
 const Navbar = () => {
-  // const user = null;
   const { user, logOut } = useAuth();
+  const [isAdmin] = useAdmin();
   const location = useLocation();
-  // console.log(user);
-
   const [scrolled, setScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [theme, setTheme] = useState("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
+
+  // Fetch user info from backend for premium check
+  useEffect(() => {
+    if (user?.email) {
+      axios
+        .get(`/users/${user.email}`)
+        .then((res) => setUserInfo(res.data))
+        .catch(() => setUserInfo(null));
+    } else {
+      setUserInfo(null);
+    }
+  }, [user]);
+
+  const isPremium =
+    userInfo?.premiumTaken && new Date(userInfo.premiumTaken) > new Date();
 
   const handleLogOut = () => {
     logOut()
@@ -29,7 +48,6 @@ const Navbar = () => {
         });
       })
       .catch((error) => {
-        console.error(error);
         Swal.fire({
           title: "Logout Failed",
           text: "Something went wrong while logging out.",
@@ -41,22 +59,14 @@ const Navbar = () => {
         });
       });
   };
-  ("");
 
-  const [theme, setTheme] = useState("");
   useEffect(() => {
     const htmlElement = document.documentElement;
     const observer = new MutationObserver(() => {
       setTheme(htmlElement.classList.contains("dark") ? "dark" : "light");
     });
-
     setTheme(htmlElement.classList.contains("dark") ? "dark" : "light");
-
-    observer.observe(htmlElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-
+    observer.observe(htmlElement, { attributes: true, attributeFilter: ["class"] });
     return () => observer.disconnect();
   }, []);
 
@@ -68,6 +78,7 @@ const Navbar = () => {
 
   useEffect(() => {
     setIsMenuOpen(false);
+    setIsDropdownOpen(false);
   }, [location.pathname]);
 
   const navLinkStyle = ({ isActive }) =>
@@ -75,6 +86,7 @@ const Navbar = () => {
       isActive ? "font-bold underline underline-offset-4 text-[#38BDF8]" : ""
     }`;
 
+  // Desktop Links
   const Links = (
     <>
       <li>
@@ -82,26 +94,68 @@ const Navbar = () => {
           Home
         </NavLink>
       </li>
-      <li>
-        <NavLink to="/articles" className={navLinkStyle}>
+      {/* Articles Dropdown (hover) */}
+      <li
+        className="relative group"
+        onMouseEnter={() => setIsDropdownOpen(true)}
+        onMouseLeave={() => setIsDropdownOpen(false)}
+      >
+        <button
+          className="flex items-center gap-1 transition-colors duration-200 hover:text-[#38BDF8] font-medium"
+          type="button"
+        >
           Articles
-        </NavLink>
-      </li>
-      <li>
-        <NavLink to="/add-article" className={navLinkStyle}>
-          Add Article
-        </NavLink>
-      </li>
-      <li>
-        <NavLink to="/my-articles" className={navLinkStyle}>
-          My Articles
-        </NavLink>
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M19 9l-7 7-7-7" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
+        <AnimatePresence>
+          {isDropdownOpen && (
+            <motion.ul
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              transition={{ duration: 0.2 }}
+              className="absolute text-sm left-0 mt-3 w-56 bg-white/95 dark:bg-[#223A5E] rounded-xl shadow-2xl ring-1 ring-[#38BDF8]/30 z-50 py-2"
+            >
+              <li>
+                <NavLink to="/articles" className="block px-5 py-2 hover:bg-[#38BDF8]/10 dark:hover:bg-[#38BDF8]/20 hover:text-[#38BDF8] rounded-lg transition">
+                  All Articles
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/add-article" className="block px-5 py-2 hover:bg-[#38BDF8]/10 dark:hover:bg-[#38BDF8]/20 rounded-lg transition hover:text-[#38BDF8]">
+                  Add Article
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/my-articles" className="block px-5 py-2 hover:bg-[#38BDF8]/10 dark:hover:bg-[#38BDF8]/20 rounded-lg transition hover:text-[#38BDF8]">
+                  My Articles
+                </NavLink>
+              </li>
+            </motion.ul>
+          )}
+        </AnimatePresence>
       </li>
       <li>
         <NavLink to="/subscription" className={navLinkStyle}>
-          Subscriptions
+          Subscription
         </NavLink>
       </li>
+      {isAdmin && (
+        <li>
+          <NavLink to="/dashboard" className={navLinkStyle}>
+            Dashboard
+          </NavLink>
+        </li>
+      )}
+      {isPremium && (
+        <li>
+          <NavLink to="/premium-articles" className={navLinkStyle}>
+            Premium Articles
+          </NavLink>
+        </li>
+      )}
     </>
   );
 
@@ -127,7 +181,7 @@ const Navbar = () => {
       </Link>
 
       {/* Desktop Nav */}
-      <ul className="hidden lg:flex gap-8 text-[#0F172A] dark:text-[#D0E7F9]">
+      <ul className="hidden lg:flex gap-8 text-[#0F172A] dark:text-[#D0E7F9] items-center">
         {Links}
       </ul>
 
@@ -148,44 +202,40 @@ const Navbar = () => {
             </Link>
           </>
         ) : (
-          <div className="dropdown dropdown-end dropdown-hover">
-            <div tabIndex={0} role="button" className="cursor-pointer">
-              {user.photoURL ? (
+          <Link to="/profile" className="flex items-center gap-2">
+            {user.photoURL ? (
+              <>
                 <img
                   src={user.photoURL}
                   alt="User"
                   referrerPolicy="no-referrer"
                   className="w-10 h-10 rounded-full border-2 border-[#38BDF8] object-cover"
+                  data-tooltip-id="profile-tooltip"
+                  data-tooltip-content={user.displayName || user.email}
                 />
-              ) : (
-                <FaUserCircle className="text-3xl text-[#38BDF8]" />
-              )}
-            </div>
-            <ul
-              tabIndex={0}
-              className="dropdown-content menu p-3 space-y-1 bg-[#D0E7F9] dark:bg-[#1d314f] shadow-md rounded-xl w-52 z-50"
-            >
-              <li className="px-4 py-2 text-[#223A5E] hover:text-[#D0E7F9] dark:text-[#D0E7F9] dark:hover:text-[#223A5E] font-medium rounded-xl hover:bg-[#223A5E] dark:hover:bg-[#D0E7F9]">
-                {user.displayName || "User"}
-              </li>
-              <li>
-                <Link
-                  to="/profile"
-                  className="px-4 py-2 hover:text-[#38BDF8] rounded-xl hover:underline hover:bg-[#223A5E] dark:hover:bg-[#D0E7F9] transition"
-                >
-                  My Profile
-                </Link>
-              </li>
-              <li className="px-1 py-2">
-                <button
-                  onClick={handleLogOut}
-                  className="text-sm text-left px-3 py-1 rounded-xl  text-[#223A5E] hover:text-[#D0E7F9] dark:text-[#D0E7F9] dark:hover:text-[#223A5E] border border-[#38BDF8] hover:bg-[#223A5E] dark:hover:bg-[#D0E7F9] transition"
-                >
-                  Logout
-                </button>
-              </li>
-            </ul>
-          </div>
+                <Tooltip
+                  id="profile-tooltip"
+                  place="bottom"
+                  effect="solid"
+                  className="!bg-[#38BDF8] !text-[#0F172A] !rounded-lg !px-4 !py-2 !font-semibold"
+                />
+              </>
+            ) : (
+              <FaUserCircle
+                className="text-3xl text-[#38BDF8]"
+                data-tooltip-id="profile-tooltip"
+                data-tooltip-content={user.displayName || user.email}
+              />
+            )}
+          </Link>
+        )}
+        {user && (
+          <button
+            onClick={handleLogOut}
+            className="ml-2 border border-[#38BDF8] text-[#38BDF8] px-4 py-2 rounded-xl font-semibold hover:bg-[#38BDF8] hover:text-[#0F172A] transition-all duration-200 shadow-sm text-sm"
+          >
+            Logout
+          </button>
         )}
       </div>
 
@@ -210,56 +260,107 @@ const Navbar = () => {
             className="absolute top-[100%] mt-2 left-0 w-full bg-[#D0E7F9] dark:bg-[#0F172A] rounded-xl shadow-xl p-5 lg:hidden flex flex-col gap-4 z-40"
           >
             <ul className="space-y-2 text-[#0F172A] dark:text-[#D0E7F9]">
-              {Links}
-            </ul>
-            {!user ? (
+              <li>
+                <NavLink to="/" className={navLinkStyle}>
+                  Home
+                </NavLink>
+              </li>
+              {/* Articles Dropdown for mobile */}
+              <li>
+                <details>
+                  <summary className="cursor-pointer">Articles</summary>
+                  <ul className="ml-4 space-y-1">
+                    <li>
+                      <NavLink to="/articles" className={navLinkStyle}>
+                        All Articles
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink to="/add-article" className={navLinkStyle}>
+                        Add Article
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink to="/my-articles" className={navLinkStyle}>
+                        My Articles
+                      </NavLink>
+                    </li>
+                  </ul>
+                </details>
+              </li>
+              <li>
+                <NavLink to="/subscription" className={navLinkStyle}>
+                  Subscription
+                </NavLink>
+              </li>
+              {isAdmin && (
+                <li>
+                  <NavLink to="/dashboard" className={navLinkStyle}>
+                    Dashboard
+                  </NavLink>
+                </li>
+              )}
+              {isPremium && (
+                <li>
+                  <NavLink to="/premium-articles" className={navLinkStyle}>
+                    Premium Articles
+                  </NavLink>
+                </li>
+              )}
+              {user && (
+                <li>
+                  <Link to="/profile" className="flex items-center gap-2">
+            {user.photoURL ? (
               <>
-                <ThemeToggle />
-                <Link to="/login">
-                  <button className="w-full bg-[#38BDF8] text-[#0F172A] py-2 rounded-xl font-semibold hover:bg-[#0EA5E9] hover:text-white transition">
-                    Login
-                  </button>
-                </Link>
-                <Link to="/register">
-                  <button className="w-full border border-[#38BDF8] text-[#38BDF8] py-2 rounded-xl font-semibold hover:bg-[#38BDF8] hover:text-[#0F172A] transition">
-                    Register
-                  </button>
-                </Link>
+                <img
+                  src={user.photoURL}
+                  alt="User"
+                  referrerPolicy="no-referrer"
+                  className="w-10 h-10 rounded-full border-2 border-[#38BDF8] object-cover"
+                  data-tooltip-id="profile-tooltip"
+                  data-tooltip-content={user.displayName || user.email}
+                />
+                <Tooltip
+                  id="profile-tooltip"
+                  place="bottom"
+                  effect="solid"
+                  className="!bg-[#38BDF8] !text-[#0F172A] !rounded-lg !px-4 !py-2 !font-semibold"
+                />
               </>
             ) : (
-              <>
-                <div className="flex items-center gap-4">
-                  <ThemeToggle />
-                  {user.photoURL ? (
-                    <img
-                      key={user.photoURL}
-                      src={user.photoURL}
-                      alt="User"
-                      referrerPolicy="no-referrer"
-                      className="w-10 h-10 rounded-full border-2 border-[#38BDF8] object-cover bg-gray-200"
-                    />
-                  ) : (
-                    <FaUserCircle className="text-3xl text-[#38BDF8] dark:text-[#38BDF8]" />
-                  )}
-                  <p className="text-[#223A5E] dark:text-[#D0E7F9] font-medium">
-                    {user.displayName}
-                  </p>
-                  <Link
-                    to="/profile"
-                    className="text-[#38BDF8] hover:text-[#4f90d1]"
-                  >
-                    My Profile
-                  </Link>
-                </div>
-                <button
-                  onClick={handleLogOut}
-                  className="w-full border border-[#38BDF8] text-[#38BDF8] py-2 rounded-lg text-sm font-semibold hover:bg-[#38BDF8] hover:text-[#223A5E]"
-                >
-                  Logout
-                </button>
-              </>
-              
+              <FaUserCircle
+                className="text-3xl text-[#38BDF8]"
+                data-tooltip-id="profile-tooltip"
+                data-tooltip-content={user.displayName || user.email}
+              />
             )}
+          </Link>
+                </li>
+              )}
+              {!user ? (
+                <>
+                  <li>
+                    <Link to="/login" className={navLinkStyle}>
+                      Login
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/register" className={navLinkStyle}>
+                      Register
+                    </Link>
+                  </li>
+                </>
+              ) : (
+                <li>
+                  <button
+                    onClick={handleLogOut}
+                    className="w-full border border-[#38BDF8] text-[#38BDF8] py-2 rounded-lg text-sm font-semibold hover:bg-[#38BDF8] hover:text-[#223A5E]"
+                  >
+                    Logout
+                  </button>
+                </li>
+              )}
+            </ul>
           </motion.div>
         )}
       </AnimatePresence>

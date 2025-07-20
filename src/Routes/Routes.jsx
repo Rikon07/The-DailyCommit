@@ -9,6 +9,7 @@ import PrivateRoute from "../Providers/Private";
 import Profile from "../Pages/Authentication Pages/Profile";
 import Dashboard from "../Layouts/Dashboard";
 import AddArticles from "../Pages/Home pages/AddArticles";
+import Subscription from "../Pages/Home pages/Subscription";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -32,6 +33,22 @@ const router = createBrowserRouter([
         Component: () => (
           <PrivateRoute>
             <AddArticles />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/subscription",
+        Component: () => (
+          <PrivateRoute>
+            <Subscription />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/payment",
+        Component: () => (
+          <PrivateRoute>
+            <Payment />
           </PrivateRoute>
         ),
       },

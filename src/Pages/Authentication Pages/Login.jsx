@@ -20,7 +20,8 @@ const saveUserToDB = async (user) => {
       name: user.displayName,
       email: user.email,
       photo: user.photoURL,
-      role: 'user' 
+      role: 'user',
+      type: 'normal',
     });
   } catch (error) {
     console.error('Error saving user:', error.message);

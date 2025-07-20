@@ -61,6 +61,7 @@ const Register = () => {
       email,
       photo: photoURL,
       role: "user",
+      type: 'normal',
     });
 
     showAlert(`Welcome to the DailyCommit ${name}`, "", "success");
@@ -80,6 +81,7 @@ const Register = () => {
       email: user.email,
       photo: user.photoURL,
       role: "user",
+      type: 'normal',
     });
 
     showAlert(`Welcome to the DailyCommit ${user.displayName}`, "", "success");

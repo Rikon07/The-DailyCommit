@@ -45,7 +45,7 @@ const Banner = () => {
   return (
     <section
       ref={bannerRef}
-      className="relative w-full min-h-[90vh] flex flex-col justify-center items-center text-center overflow-hidden"
+      className="relative w-full min-h-[92vh] flex flex-col justify-center items-center text-center overflow-hidden"
     >
       {/* Background Image */}
       <div className="absolute inset-0">

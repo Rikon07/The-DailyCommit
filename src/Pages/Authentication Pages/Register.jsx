@@ -4,6 +4,7 @@ import { FcGoogle } from "react-icons/fc";
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
 import useAuth from "../../Hooks/UseAuth";
+import axios from "../../Hooks/Axios";
 
 const Register = () => {
   const { createUser, setUser, updateUser, googleSignIn } = useAuth();
@@ -21,54 +22,72 @@ const Register = () => {
       });
     };
 
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const name = form.name.value;
-    const photoURL = form.photoURL.value;
-    const email = form.email.value;
-    const password = form.password.value;
+ const handleRegister = async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const name = form.name.value;
+  const photoURL = form.photoURL.value;
+  const email = form.email.value;
+  const password = form.password.value;
 
-    const passwordRegex = {
-      length: /.{6,}/,
-      capital: /[A-Z]/,
-      special: /[!@#$%^&*(),.?":{}|<>]/,
-      number: /[0-9]/,
-    };
-
-    if (!passwordRegex.length.test(password)) {
-      return setError("Password must be at least 6 characters long.");
-    }
-    if (!passwordRegex.capital.test(password)) {
-      return setError("Password must include at least one uppercase letter.");
-    }
-    if (!passwordRegex.special.test(password)) {
-      return setError("Password must include at least one special character.");
-    }
-    if (!passwordRegex.number.test(password)) {
-      return setError("Password must include at least one number.");
-    }
-
-    try {
-      const res = await createUser(email, password);
-      await updateUser(name, photoURL);
-      setUser({ ...res.user, displayName: name, photoURL });
-      showAlert(`Welcome to the DailyCommit ${name}`, "success");
-      navigate("/");
-    } catch (err) {
-      showAlert("Registration Failed", err.message, "error");
-    }
+  const passwordRegex = {
+    length: /.{6,}/,
+    capital: /[A-Z]/,
+    special: /[!@#$%^&*(),.?":{}|<>]/,
+    number: /[0-9]/,
   };
+
+  if (!passwordRegex.length.test(password)) {
+    return setError("Password must be at least 6 characters long.");
+  }
+  if (!passwordRegex.capital.test(password)) {
+    return setError("Password must include at least one uppercase letter.");
+  }
+  if (!passwordRegex.special.test(password)) {
+    return setError("Password must include at least one special character.");
+  }
+  if (!passwordRegex.number.test(password)) {
+    return setError("Password must include at least one number.");
+  }
+
+  try {
+    const res = await createUser(email, password);
+    await updateUser(name, photoURL);
+    setUser({ ...res.user, displayName: name, photoURL });
+
+    
+    await axios.post("/users", {
+      name,
+      email,
+      photo: photoURL,
+      role: "user",
+    });
+
+    showAlert(`Welcome to the DailyCommit ${name}`, "", "success");
+    navigate("/");
+  } catch (err) {
+    showAlert("Registration Failed", err.message, "error");
+  }
+};
 
   const handleGoogle = async () => {
-    try {
-      await googleSignIn();
-      showAlert(`Welcome to the DailyCommit ${name}`, "success");
-      navigate("/");
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  try {
+    const result = await googleSignIn();
+    const user = result.user;
+
+    await axios.post("/users", {
+      name: user.displayName,
+      email: user.email,
+      photo: user.photoURL,
+      role: "user",
+    });
+
+    showAlert(`Welcome to the DailyCommit ${user.displayName}`, "", "success");
+    navigate("/");
+  } catch (err) {
+    console.log(err);
+  }
+};
 
   return (
     <motion.div

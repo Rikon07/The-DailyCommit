@@ -7,6 +7,8 @@ import Login from '../Pages/Authentication Pages/Login';
 import Register from "../Pages/Authentication Pages/Register";
 import PrivateRoute from "../Providers/Private";
 import Profile from "../Pages/Authentication Pages/Profile";
+import Dashboard from "../Layouts/Dashboard";
+import AddArticles from "../Pages/Home pages/AddArticles";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -25,6 +27,14 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+      {
+        path: "/add-article",
+        Component: () => (
+          <PrivateRoute>
+            <AddArticles />
+          </PrivateRoute>
+        ),
+      },
     ],
   },
   {
@@ -40,6 +50,16 @@ const router = createBrowserRouter([
         Component: Register
       }
     ]
+  },
+  {
+  path: '/dashboard',
+  Component: () => (
+    <PrivateRoute>
+      <AdminRoute>
+        <Dashboard />
+      </AdminRoute>
+    </PrivateRoute>
+    )
   }
 ]);
 

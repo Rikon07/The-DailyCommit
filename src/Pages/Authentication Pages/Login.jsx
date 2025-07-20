@@ -5,13 +5,28 @@ import Swal from "sweetalert2";
 import { motion } from "framer-motion";
 import useAuth from "../../Hooks/UseAuth";
 import Loader from "../../Components/Extra Components/Loader";
-
+import axios from 'axios';
 const Login = () => {
   const { signIn, googleSignIn } = useAuth();
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  // const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+
+
+const saveUserToDB = async (user) => {
+  try {
+    await axios.post('http://localhost:3000/users', {
+      name: user.displayName,
+      email: user.email,
+      photo: user.photoURL,
+      role: 'user' 
+    });
+  } catch (error) {
+    console.error('Error saving user:', error.message);
+  }
+};
+
 
   const showAlert = (title, text, icon) => {
     Swal.fire({
@@ -33,23 +48,31 @@ const Login = () => {
     setLoading(true);
     try {
       const result = await signIn(email, password);
+      await saveUserToDB(result.user);
       showAlert("Welcome Back!", `Logged in as ${result.user.displayName}`, "success");
       navigate(location.state?.from || "/", { replace: true });
     } catch (err) {
       setError(err.message);
-      showAlert("Login Failed", err.message, "error");
-    } finally {
       setLoading(false);
+      navigate("/login");
+      showAlert("Login Failed", "Wrong Credentials", "error");
+      
+      
     }
+    //  finally {
+    //   setLoading(false);
+    // }
   };
 
   const handleGoogleLogin = async () => {
     setLoading(true);
     try {
       const result = await googleSignIn();
+      await saveUserToDB(result.user);
       showAlert("Welcome!", `Logged in as ${result.user.displayName}`, "success");
       navigate(location.state?.from || "/", { replace: true });
     } catch (error) {
+      setError(error.message);
       showAlert("Oops!", "Google sign-in failed", "error");
     } finally {
       setLoading(false);

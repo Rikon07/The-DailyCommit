@@ -10,6 +10,7 @@ const Navbar = () => {
   // const user = null;
   const { user, logOut } = useAuth();
   const location = useLocation();
+  // console.log(user);
 
   const [scrolled, setScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -153,7 +154,8 @@ const Navbar = () => {
                 <img
                   src={user.photoURL}
                   alt="User"
-                  className="w-10 h-10 rounded-full border-2 border-[#38BDF8]"
+                  referrerPolicy="no-referrer"
+                  className="w-10 h-10 rounded-full border-2 border-[#38BDF8] object-cover"
                 />
               ) : (
                 <FaUserCircle className="text-3xl text-[#38BDF8]" />
@@ -225,7 +227,38 @@ const Navbar = () => {
                 </Link>
               </>
             ) : (
-              <FaUserCircle className="text-3xl text-[#38BDF8]" />
+              <>
+                <div className="flex items-center gap-4">
+                  <ThemeToggle />
+                  {user.photoURL ? (
+                    <img
+                      key={user.photoURL}
+                      src={user.photoURL}
+                      alt="User"
+                      referrerPolicy="no-referrer"
+                      className="w-10 h-10 rounded-full border-2 border-[#38BDF8] object-cover bg-gray-200"
+                    />
+                  ) : (
+                    <FaUserCircle className="text-3xl text-[#38BDF8] dark:text-[#38BDF8]" />
+                  )}
+                  <p className="text-[#223A5E] dark:text-[#D0E7F9] font-medium">
+                    {user.displayName}
+                  </p>
+                  <Link
+                    to="/profile"
+                    className="text-[#38BDF8] hover:text-[#4f90d1]"
+                  >
+                    My Profile
+                  </Link>
+                </div>
+                <button
+                  onClick={handleLogOut}
+                  className="w-full border border-[#38BDF8] text-[#38BDF8] py-2 rounded-lg text-sm font-semibold hover:bg-[#38BDF8] hover:text-[#223A5E]"
+                >
+                  Logout
+                </button>
+              </>
+              
             )}
           </motion.div>
         )}

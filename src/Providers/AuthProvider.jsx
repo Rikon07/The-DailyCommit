@@ -20,6 +20,8 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+
+
   // console.log(loading, user);
 
   const createUser = (email, password) => {
@@ -41,14 +43,21 @@ const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
-    });
-    return () => {
-      unsubscribe();
-    };
-  }, []);
+  const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+    setUser(currentUser);
+    setLoading(false);
+
+    if (currentUser) {
+      const token = await currentUser.getIdToken();
+      localStorage.setItem("access-token", token); 
+    } else {
+      localStorage.removeItem("access-token");
+    }
+  });
+
+  return () => unsubscribe();
+}, []);
+
   const googleProvider = new GoogleAuthProvider();
 
   if (loading) {

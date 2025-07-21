@@ -17,6 +17,8 @@ import AllUsers from "../Pages/Dashboard Pages/AllUsers";
 import AllArticles from "../Pages/Dashboard Pages/AllArticles";
 import AddPublisher from "../Pages/Dashboard Pages/AddPublisher";
 import AdminRoute from "../Providers/AdminRoute";
+import AllArticle from "../Pages/Home pages/AllArticle";
+import ArticleDetails from "../Pages/Home pages/ArticleDetails";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 const router = createBrowserRouter([
@@ -46,12 +48,24 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "/articles",
+        Component: AllArticle,
+      },
+      {
+        path: "/articles/:id",
+        Component: () => (
+          <PrivateRoute>
+            <ArticleDetails />
+          </PrivateRoute>
+        ),
+      },
+      {
         path: "/subscription",
         element: (
           <PrivateRoute>
             <Elements stripe={stripePromise}>
-            <Subscription />
-          </Elements>
+              <Subscription />
+            </Elements>
           </PrivateRoute>
         ),
       },
@@ -72,21 +86,21 @@ const router = createBrowserRouter([
     ],
   },
   {
-  path: "/dashboard",
-  Component: () => (
-    <PrivateRoute>
-      <AdminRoute>
-        <Dashboard />
-      </AdminRoute>
-    </PrivateRoute>
-  ),
-  children: [
-    { index: true, Component: DashboardHome }, // charts
-    { path: "users", Component: AllUsers },
-    { path: "articles", Component: AllArticles },
-    { path: "publishers", Component: AddPublisher },
-  ],
-}
+    path: "/dashboard",
+    Component: () => (
+      <PrivateRoute>
+        <AdminRoute>
+          <Dashboard />
+        </AdminRoute>
+      </PrivateRoute>
+    ),
+    children: [
+      { index: true, Component: DashboardHome }, // charts
+      { path: "users", Component: AllUsers },
+      { path: "articles", Component: AllArticles },
+      { path: "publishers", Component: AddPublisher },
+    ],
+  },
 ]);
 
 export default router;

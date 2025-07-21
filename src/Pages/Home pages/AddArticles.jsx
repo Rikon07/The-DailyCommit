@@ -10,7 +10,7 @@ import Loader from "../../Components/Extra Components/Loader";
 import Skeleton from "react-loading-skeleton";
 import Swal from "sweetalert2";
 import "react-loading-skeleton/dist/skeleton.css";
-
+import useAuth from "../../Hooks/UseAuth";
 const tagsOptions = [
   { value: "HTML", label: "HTML" },
   { value: "CSS", label: "CSS" },
@@ -51,25 +51,26 @@ const AddArticle = () => {
   const [loading, setLoading] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [previewUrl, setPreviewUrl] = useState(null);
-  // const [publishers, setPublishers] = useState([]);
+  const [publishers, setPublishers] = useState([]);
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
+  const {user} = useAuth();
 
-  const [publishers, setPublishers] = useState([
-  { value: "SkillHunt", label: "SkillHunt" },
-  { value: "CodePress", label: "CodePress" },
-]);
+//   const [publishers, setPublishers] = useState([
+//   { value: "SkillHunt", label: "SkillHunt" },
+//   { value: "CodePress", label: "CodePress" },
+// ]);
   // Fetch publishers from backend
-  // useEffect(() => {
-  //   axiosSecure.get("/publishers")
-  //     .then(res => {
-  //       setPublishers(res.data.map(pub => ({
-  //         value: pub.name,
-  //         label: pub.name
-  //       })));
-  //     })
-  //     .catch(() => setPublishers([]));
-  // }, [axiosSecure]);
+  useEffect(() => {
+    axiosSecure.get("/publishers")
+      .then(res => {
+        setPublishers(res.data.map(pub => ({
+          value: pub.name,
+          label: pub.name
+        })));
+      })
+      .catch(() => setPublishers([]));
+  }, [axiosSecure]);
 
   const handleImageChange = (file) => {
     if (!file || file.length === 0) return;
@@ -120,6 +121,9 @@ const AddArticle = () => {
       description: data.description,
       status: "pending",
       date: dateOnly,
+      authorName:user.displayName,
+      authorEmail: user.email,
+      authorPhoto: user.photoURL || "https://i.ibb.co/4f1z5xH/default-avatar.png",
     };
 
     try {

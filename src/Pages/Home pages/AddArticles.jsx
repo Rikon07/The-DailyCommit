@@ -1,7 +1,6 @@
 import { useForm, Controller } from "react-hook-form";
 import Select from "react-select";
-import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { FileImage } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +8,7 @@ import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { motion } from "framer-motion";
 import Loader from "../../Components/Extra Components/Loader";
 import Skeleton from "react-loading-skeleton";
+import Swal from "sweetalert2";
 import "react-loading-skeleton/dist/skeleton.css";
 
 const tagsOptions = [
@@ -20,11 +20,6 @@ const tagsOptions = [
   { value: "Node.js", label: "Node.js" },
   { value: "Algorithms", label: "Algorithms" },
   { value: "AI", label: "AI" },
-];
-
-const publishers = [
-  { value: "SkillHunt", label: "SkillHunt" },
-  { value: "CodePress", label: "CodePress" },
 ];
 
 const customStyles = {
@@ -52,16 +47,32 @@ const customStyles = {
 };
 
 const AddArticle = () => {
-  const { register, handleSubmit, control, reset, watch } = useForm();
+  const { register, handleSubmit, control, reset, formState: { errors } } = useForm();
   const [loading, setLoading] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [previewUrl, setPreviewUrl] = useState(null);
+  // const [publishers, setPublishers] = useState([]);
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
 
+  const [publishers, setPublishers] = useState([
+  { value: "SkillHunt", label: "SkillHunt" },
+  { value: "CodePress", label: "CodePress" },
+]);
+  // Fetch publishers from backend
+  // useEffect(() => {
+  //   axiosSecure.get("/publishers")
+  //     .then(res => {
+  //       setPublishers(res.data.map(pub => ({
+  //         value: pub.name,
+  //         label: pub.name
+  //       })));
+  //     })
+  //     .catch(() => setPublishers([]));
+  // }, [axiosSecure]);
+
   const handleImageChange = (file) => {
     if (!file || file.length === 0) return;
-
     const selectedFile = file[0];
     const reader = new FileReader();
     reader.onloadend = () => {
@@ -76,13 +87,13 @@ const AddArticle = () => {
     formData.append("image", file);
 
     try {
-      const res = await axios.post(
+      const res = await fetch(
         `https://api.imgbb.com/1/upload?key=dbe36fc890c8c903039528c40c376b69`,
-        formData
+        { method: "POST", body: formData }
       );
-      return res.data.data.display_url;
+      const data = await res.json();
+      return data.data.display_url;
     } catch (err) {
-      console.error("Image upload failed:", err);
       toast.error("Image upload failed 😓");
       return null;
     } finally {
@@ -101,7 +112,6 @@ const AddArticle = () => {
     }
     const dateOnly = new Date().toISOString().split("T")[0];
 
-
     const article = {
       title: data.title,
       image: imageUrl,
@@ -111,18 +121,24 @@ const AddArticle = () => {
       status: "pending",
       date: dateOnly,
     };
-    console.log("Submitting article:", article);
 
     try {
       const res = await axiosSecure.post("/articles", article);
       if (res.data.insertedId) {
-        toast.success("📰 Article submitted for approval!");
+        await Swal.fire({
+          title: "Submitted!",
+          text: "📰 Article submitted for approval!",
+          icon: "success",
+          confirmButtonColor: "#38BDF8",
+          background: "#D0E7F9",
+          color: "#0F172A",
+        });
         reset();
         setPreviewUrl(null);
-        // navigate("/dashboard/my-articles");
+        // Optionally navigate to My Articles
+        // navigate("/my-articles");
       }
     } catch (err) {
-      console.error(err);
       toast.error("Something went wrong 😬");
     } finally {
       setLoading(false);
@@ -146,10 +162,11 @@ const AddArticle = () => {
         {/* Title */}
         <label className="block text-sm mb-2 text-gray-600 dark:text-gray-300">Article Title</label>
         <input
-          {...register("title", { required: true })}
+          {...register("title", { required: "Title is required" })}
           placeholder="Article Title"
           className="input-style input"
         />
+        {errors.title && <span className="text-red-500 text-xs">{errors.title.message}</span>}
 
         {/* Image Upload */}
         <div>
@@ -157,7 +174,7 @@ const AddArticle = () => {
           <div className="relative w-full">
             <input
               {...register("image", {
-                required: true,
+                required: "Image is required",
                 onChange: (e) => handleImageChange(e.target.files),
               })}
               type="file"
@@ -166,6 +183,7 @@ const AddArticle = () => {
             />
             <FileImage className="absolute right-4 top-2.5 text-[#38BDF8]" />
           </div>
+          {errors.image && <span className="text-red-500 text-xs">{errors.image.message}</span>}
           {uploadingImage ? (
             <Skeleton height={100} className="mt-3 rounded-lg" />
           ) : (
@@ -184,23 +202,25 @@ const AddArticle = () => {
         <Controller
           name="publisher"
           control={control}
-          rules={{ required: true }}
+          rules={{ required: "Publisher is required" }}
           render={({ field }) => (
             <Select
               {...field}
               options={publishers}
               placeholder="Select Publisher"
               styles={customStyles}
+              isLoading={publishers.length === 0}
             />
           )}
         />
+        {errors.publisher && <span className="text-red-500 text-xs">{errors.publisher.message}</span>}
 
         {/* Tags */}
         <label className="block text-sm mb-2 text-gray-600 dark:text-gray-300">Tags</label>
         <Controller
           name="tags"
           control={control}
-          rules={{ required: true }}
+          rules={{ required: "Select at least one tag" }}
           render={({ field }) => (
             <Select
               {...field}
@@ -211,24 +231,27 @@ const AddArticle = () => {
             />
           )}
         />
+        {errors.tags && <span className="text-red-500 text-xs">{errors.tags.message}</span>}
 
         {/* Description */}
         <label className="block text-sm mb-2 text-gray-600 dark:text-gray-300">Article Description</label>
         <textarea
-          {...register("description", { required: true })}
+          {...register("description", { required: "Description is required", maxLength: 1000 })}
           rows={6}
           placeholder="Write the article description..."
           className="input-style input"
         ></textarea>
+        {errors.description && <span className="text-red-500 text-xs">{errors.description.message}</span>}
 
         {/* Submit */}
         <motion.button
           type="submit"
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.98 }}
+          disabled={loading || uploadingImage}
           className="bg-[#38BDF8] text-white px-6 py-2 rounded-lg shadow-md hover:bg-sky-500 transition-all"
         >
-          Submit Article
+          {loading ? "Submitting..." : "Submit Article"}
         </motion.button>
       </form>
     </motion.div>

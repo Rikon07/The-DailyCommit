@@ -34,10 +34,10 @@ const saveUserToDB = async (user) => {
   try {
     const userRes = await axios.get(`http://localhost:3000/users/${email}`);
     const premiumTaken = userRes.data.premiumTaken;
-    console.log("Premium Taken:", premiumTaken);
-    console.log("Current Date:", new Date());
-    console.log("Premium Expiry Date:", new Date(premiumTaken));
-    console.log("Is Premium Expired:", new Date() > new Date(premiumTaken));
+    // console.log("Premium Taken:", premiumTaken);
+    // console.log("Current Date:", new Date());
+    // console.log("Premium Expiry Date:", new Date(premiumTaken));
+    // console.log("Is Premium Expired:", new Date() > new Date(premiumTaken));
     if (premiumTaken && new Date() > new Date(premiumTaken)) {
   // Premium expired, update in DB
   await axiosSecure.patch(`/users/premium/${email}`, { 

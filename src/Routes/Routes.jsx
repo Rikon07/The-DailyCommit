@@ -12,6 +12,11 @@ import AddArticles from "../Pages/Home pages/AddArticles";
 import Subscription from "../Pages/Home pages/Subscription";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
+import DashboardHome from "../Pages/Dashboard Pages/DashboardHome";
+import AllUsers from "../Pages/Dashboard Pages/AllUsers";
+import AllArticles from "../Pages/Dashboard Pages/AllArticles";
+import AddPublisher from "../Pages/Dashboard Pages/AddPublisher";
+import AdminRoute from "../Providers/AdminRoute";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 const router = createBrowserRouter([
@@ -67,15 +72,21 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/dashboard",
-    Component: () => (
-      <PrivateRoute>
-        <AdminRoute>
-          <Dashboard />
-        </AdminRoute>
-      </PrivateRoute>
-    ),
-  },
+  path: "/dashboard",
+  Component: () => (
+    <PrivateRoute>
+      <AdminRoute>
+        <Dashboard />
+      </AdminRoute>
+    </PrivateRoute>
+  ),
+  children: [
+    { index: true, Component: DashboardHome }, // charts
+    { path: "users", Component: AllUsers },
+    { path: "articles", Component: AllArticles },
+    { path: "publishers", Component: AddPublisher },
+  ],
+}
 ]);
 
 export default router;

@@ -6,13 +6,14 @@ import { motion } from "framer-motion";
 import useAuth from "../../Hooks/UseAuth";
 import Loader from "../../Components/Extra Components/Loader";
 import axios from 'axios';
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
 const Login = () => {
   const { signIn, googleSignIn } = useAuth();
   const [error, setError] = useState("");
   const navigate = useNavigate();
   // const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-
+const axiosSecure = useAxiosSecure();
 
 const saveUserToDB = async (user) => {
   try {
@@ -33,10 +34,17 @@ const saveUserToDB = async (user) => {
   try {
     const userRes = await axios.get(`http://localhost:3000/users/${email}`);
     const premiumTaken = userRes.data.premiumTaken;
+    console.log("Premium Taken:", premiumTaken);
+    console.log("Current Date:", new Date());
+    console.log("Premium Expiry Date:", new Date(premiumTaken));
+    console.log("Is Premium Expired:", new Date() > new Date(premiumTaken));
     if (premiumTaken && new Date() > new Date(premiumTaken)) {
-      // Premium expired, update in DB
-      await axios.patch(`http://localhost:3000/users/premium/${email}`, { premiumTaken: null });
-    }
+  // Premium expired, update in DB
+  await axiosSecure.patch(`/users/premium/${email}`, { 
+  premiumTaken: "null",
+  type: "normal"
+});
+}
   } catch (err) {
     console.error("Error checking premium expiry:", err);
   }
@@ -69,8 +77,9 @@ const saveUserToDB = async (user) => {
     } catch (err) {
       setError(err.message);
       setLoading(false);
-      navigate("/login");
+      // navigate("/login");
       showAlert("Login Failed", "Wrong Credentials", "error");
+      navigate(location.state?.from || "/", { replace: true });
       
       
     }

@@ -50,7 +50,10 @@ const Subscription = () => {
       // 3. Update user to premium
       const now = new Date();
       const expiry = new Date(now.getTime() + selected.value * 60 * 1000);
-      await axiosSecure.patch(`/users/premium/${user.email}`, { premiumTaken: expiry.toISOString() });
+      await axiosSecure.patch(`/users/premium/${user.email}`, { 
+  premiumTaken: expiry.toISOString(),
+  type: "premium"
+});
 
       await Swal.fire({
         title: "Payment Successful!",

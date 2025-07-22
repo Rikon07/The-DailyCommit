@@ -20,6 +20,7 @@ import AdminRoute from "../Providers/AdminRoute";
 import AllArticle from "../Pages/Home pages/AllArticle";
 import ArticleDetails from "../Pages/Home pages/ArticleDetails";
 import PremiumArticles from "../Pages/Home pages/PremiumArticles";
+import MyArticles from "../Pages/Home pages/MyArticles";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 const router = createBrowserRouter([
@@ -57,6 +58,14 @@ const router = createBrowserRouter([
         Component: () => (
           <PrivateRoute>
             <ArticleDetails />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/my-articles",
+        Component: () => (
+          <PrivateRoute>
+            <MyArticles />
           </PrivateRoute>
         ),
       },

@@ -266,6 +266,7 @@ const Navbar = () => {
             transition={{ duration: 0.3 }}
             className="absolute top-[100%] mt-2 left-0 w-full bg-[#D0E7F9] dark:bg-[#0F172A] rounded-xl shadow-xl p-5 lg:hidden flex flex-col gap-4 z-40"
           >
+            <ThemeToggle />
             <ul className="space-y-2 text-[#0F172A] dark:text-[#D0E7F9]">
               <li>
                 <NavLink to="/" className={navLinkStyle}>

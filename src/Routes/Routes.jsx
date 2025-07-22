@@ -19,6 +19,7 @@ import AddPublisher from "../Pages/Dashboard Pages/AddPublisher";
 import AdminRoute from "../Providers/AdminRoute";
 import AllArticle from "../Pages/Home pages/AllArticle";
 import ArticleDetails from "../Pages/Home pages/ArticleDetails";
+import PremiumArticles from "../Pages/Home pages/PremiumArticles";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 const router = createBrowserRouter([
@@ -66,6 +67,14 @@ const router = createBrowserRouter([
             <Elements stripe={stripePromise}>
               <Subscription />
             </Elements>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/premium-articles",
+        Component: () => (
+          <PrivateRoute>
+            <PremiumArticles />
           </PrivateRoute>
         ),
       },

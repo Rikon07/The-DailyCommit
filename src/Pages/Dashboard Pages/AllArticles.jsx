@@ -17,6 +17,7 @@ export default function AllArticles() {
       return res.data;
     },
   });
+  console.log(articles);
 
   // Approve article
   const approveMutation = useMutation({

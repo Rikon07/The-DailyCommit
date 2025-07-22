@@ -4,6 +4,7 @@ import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../Hooks/UseAuth";
 import Swal from "sweetalert2";
+import { useQueryClient } from "@tanstack/react-query";
 
 const periods = [
   { label: "1 Minute", value: 1, price: 1 },
@@ -19,6 +20,7 @@ const Subscription = () => {
   const navigate = useNavigate();
   const stripe = useStripe();
   const elements = useElements();
+  const queryClient = useQueryClient();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,9 +53,12 @@ const Subscription = () => {
       const now = new Date();
       const expiry = new Date(now.getTime() + selected.value * 60 * 1000);
       await axiosSecure.patch(`/users/premium/${user.email}`, { 
-  premiumTaken: expiry.toISOString(),
-  type: "premium"
-});
+        premiumTaken: expiry.toISOString(),
+        type: "premium"
+      });
+
+      // Refetch userInfo in Navbar instantly!
+      await queryClient.invalidateQueries(["userInfo", user.email]);
 
       await Swal.fire({
         title: "Payment Successful!",

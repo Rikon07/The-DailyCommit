@@ -8,7 +8,7 @@ import useAuth from "../../Hooks/UseAuth";
 import useAdmin from "../../Hooks/useAdmin";
 import axios from "../../Hooks/Axios";
 import { Tooltip } from "react-tooltip";
-
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 const Navbar = () => {
   const { user, logOut } = useAuth();
   const [isAdmin] = useAdmin();
@@ -17,19 +17,26 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [theme, setTheme] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [userInfo, setUserInfo] = useState(null);
-
+  // const [userInfo, setUserInfo] = useState(null);
   // Fetch user info from backend for premium check
-  useEffect(() => {
-    if (user?.email) {
-      axios
-        .get(`/users/${user.email}`)
-        .then((res) => setUserInfo(res.data))
-        .catch(() => setUserInfo(null));
-    } else {
-      setUserInfo(null);
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user?.email) {
+  //     axios
+  //       .get(`/users/${user.email}`)
+  //       .then((res) => setUserInfo(res.data))
+  //       .catch(() => setUserInfo(null));
+  //   } else {
+  //     setUserInfo(null);
+  //   }
+  // }, [user]);
+  const { data: userInfo } = useQuery({
+    queryKey: ["userInfo", user?.email],
+    enabled: !!user?.email,
+    queryFn: async () => {
+      const res = await axios.get(`/users/${user.email}`);
+      return res.data;
+    },
+  });
 
   const isPremium =
     userInfo?.premiumTaken && new Date(userInfo.premiumTaken) > new Date();

@@ -12,14 +12,31 @@ import Swal from "sweetalert2";
 import "react-loading-skeleton/dist/skeleton.css";
 import useAuth from "../../Hooks/UseAuth";
 const tagsOptions = [
-  { value: "HTML", label: "HTML" },
-  { value: "CSS", label: "CSS" },
-  { value: "JavaScript", label: "JavaScript" },
-  { value: "React", label: "React" },
-  { value: "MongoDB", label: "MongoDB" },
-  { value: "Node.js", label: "Node.js" },
-  { value: "Algorithms", label: "Algorithms" },
   { value: "AI", label: "AI" },
+  { value: "Machine Learning", label: "Machine Learning" },
+  { value: "Deep Learning", label: "Deep Learning" },
+  { value: "Data Science", label: "Data Science" },
+  { value: "Cybersecurity", label: "Cybersecurity" },
+  { value: "Cloud Computing", label: "Cloud Computing" },
+  { value: "Web Development", label: "Web Development" },
+  { value: "Mobile Development", label: "Mobile Development" },
+  { value: "Programming Languages", label: "Programming Languages" },
+  { value: "Algorithms", label: "Algorithms" },
+  { value: "Networking", label: "Networking" },
+  { value: "Blockchain", label: "Blockchain" },
+  { value: "DevOps", label: "DevOps" },
+  { value: "Open Source", label: "Open Source" },
+  { value: "Quantum Computing", label: "Quantum Computing" },
+  { value: "Software Engineering", label: "Software Engineering" },
+  { value: "Database", label: "Database" },
+  { value: "Big Data", label: "Big Data" },
+  { value: "UI/UX", label: "UI/UX" },
+  { value: "Startups", label: "Startups" },
+  { value: "Tech Industry", label: "Tech Industry" },
+  { value: "Research", label: "Research" },
+  { value: "Hardware", label: "Hardware" },
+  { value: "Ethics", label: "Ethics" },
+  { value: "Education", label: "Education" },
 ];
 
 const customStyles = {
@@ -47,27 +64,36 @@ const customStyles = {
 };
 
 const AddArticle = () => {
-  const { register, handleSubmit, control, reset, formState: { errors } } = useForm();
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm();
   const [loading, setLoading] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [publishers, setPublishers] = useState([]);
   const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
-  const {user} = useAuth();
+  const { user } = useAuth();
 
-//   const [publishers, setPublishers] = useState([
-//   { value: "SkillHunt", label: "SkillHunt" },
-//   { value: "CodePress", label: "CodePress" },
-// ]);
+  //   const [publishers, setPublishers] = useState([
+  //   { value: "SkillHunt", label: "SkillHunt" },
+  //   { value: "CodePress", label: "CodePress" },
+  // ]);
   // Fetch publishers from backend
   useEffect(() => {
-    axiosSecure.get("/publishers")
-      .then(res => {
-        setPublishers(res.data.map(pub => ({
-          value: pub.name,
-          label: pub.name
-        })));
+    axiosSecure
+      .get("/publishers")
+      .then((res) => {
+        setPublishers(
+          res.data.map((pub) => ({
+            value: pub.name,
+            label: pub.name,
+          }))
+        );
       })
       .catch(() => setPublishers([]));
   }, [axiosSecure]);
@@ -121,9 +147,10 @@ const AddArticle = () => {
       description: data.description,
       status: "pending",
       date: dateOnly,
-      authorName:user.displayName,
+      authorName: user.displayName,
       authorEmail: user.email,
-      authorPhoto: user.photoURL || "https://i.ibb.co/4f1z5xH/default-avatar.png",
+      authorPhoto:
+        user.photoURL || "https://i.ibb.co/4f1z5xH/default-avatar.png",
     };
 
     try {
@@ -158,23 +185,31 @@ const AddArticle = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      <h2 className="text-2xl xl:text-3xl font-semibold mb-2 text-center cabin">Add New Article</h2>
+      <h2 className="text-2xl xl:text-3xl font-semibold mb-2 text-center cabin">
+        Add New Article
+      </h2>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="space-y-6 bg-[#D0E7F9]/30 dark:bg-[#0F172A]/50 p-6 rounded-2xl shadow-xl backdrop-blur-md"
       >
         {/* Title */}
-        <label className="block text-sm mb-2 text-gray-600 dark:text-gray-300">Article Title</label>
+        <label className="block text-sm mb-2 text-gray-600 dark:text-gray-300">
+          Article Title
+        </label>
         <input
           {...register("title", { required: "Title is required" })}
           placeholder="Article Title"
           className="input-style input"
         />
-        {errors.title && <span className="text-red-500 text-xs">{errors.title.message}</span>}
+        {errors.title && (
+          <span className="text-red-500 text-xs">{errors.title.message}</span>
+        )}
 
         {/* Image Upload */}
         <div>
-          <label className="block text-sm mb-2 text-gray-600 dark:text-gray-300">Upload Image</label>
+          <label className="block text-sm mb-2 text-gray-600 dark:text-gray-300">
+            Upload Image
+          </label>
           <div className="relative w-full">
             <input
               {...register("image", {
@@ -187,7 +222,9 @@ const AddArticle = () => {
             />
             <FileImage className="absolute right-4 top-2.5 text-[#38BDF8]" />
           </div>
-          {errors.image && <span className="text-red-500 text-xs">{errors.image.message}</span>}
+          {errors.image && (
+            <span className="text-red-500 text-xs">{errors.image.message}</span>
+          )}
           {uploadingImage ? (
             <Skeleton height={100} className="mt-3 rounded-lg" />
           ) : (
@@ -202,7 +239,9 @@ const AddArticle = () => {
         </div>
 
         {/* Publisher */}
-        <label className="block text-sm mb-2 text-gray-600 dark:text-gray-300">Publisher</label>
+        <label className="block text-sm mb-2 text-gray-600 dark:text-gray-300">
+          Publisher
+        </label>
         <Controller
           name="publisher"
           control={control}
@@ -217,10 +256,16 @@ const AddArticle = () => {
             />
           )}
         />
-        {errors.publisher && <span className="text-red-500 text-xs">{errors.publisher.message}</span>}
+        {errors.publisher && (
+          <span className="text-red-500 text-xs">
+            {errors.publisher.message}
+          </span>
+        )}
 
         {/* Tags */}
-        <label className="block text-sm mb-2 text-gray-600 dark:text-gray-300">Tags</label>
+        <label className="block text-sm mb-2 text-gray-600 dark:text-gray-300">
+          Tags
+        </label>
         <Controller
           name="tags"
           control={control}
@@ -235,17 +280,28 @@ const AddArticle = () => {
             />
           )}
         />
-        {errors.tags && <span className="text-red-500 text-xs">{errors.tags.message}</span>}
+        {errors.tags && (
+          <span className="text-red-500 text-xs">{errors.tags.message}</span>
+        )}
 
         {/* Description */}
-        <label className="block text-sm mb-2 text-gray-600 dark:text-gray-300">Article Description</label>
+        <label className="block text-sm mb-2 text-gray-600 dark:text-gray-300">
+          Article Description
+        </label>
         <textarea
-          {...register("description", { required: "Description is required", maxLength: 1000 })}
+          {...register("description", {
+            required: "Description is required",
+            maxLength: 3000,
+          })}
           rows={6}
           placeholder="Write the article description..."
-          className="input-style input"
+          className="w-full px-4 py-3 rounded-lg border border-[#38BDF8]/20 bg-white dark:bg-[#0F172A] text-[#0F172A] dark:text-[#D0E7F9] focus:outline-none focus:ring-2 focus:ring-[#38BDF8] resize-y  text-base"
         ></textarea>
-        {errors.description && <span className="text-red-500 text-xs">{errors.description.message}</span>}
+        {errors.description && (
+          <span className="text-red-500 text-xs">
+            {errors.description.message}
+          </span>
+        )}
 
         {/* Submit */}
         <motion.button

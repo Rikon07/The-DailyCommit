@@ -27,7 +27,7 @@ export default function AllUsers() {
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto text-center cabin">
       <h2 className="text-2xl font-bold mb-4">All Users</h2>
       <table className="min-w-full bg-white dark:bg-[#223A5E] rounded-xl shadow">
         <thead>
@@ -44,8 +44,8 @@ export default function AllUsers() {
           {users.map((u, i) => (
             <tr key={u._id} className="border-b">
               <td className="p-3">{i + 1}</td>
-              <td className="p-3">
-                <img src={u.photo} alt={u.name} className="w-10 h-10 rounded-full" />
+              <td className="p-3 flex justify-center">
+                <img src={u.photo} alt={u.name} className="w-10 h-10 rounded-full object-cover border border-[#38BDF8]" />
               </td>
               <td className="p-3">{u.name}</td>
               <td className="p-3">{u.email}</td>

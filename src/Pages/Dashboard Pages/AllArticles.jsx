@@ -11,12 +11,12 @@ export default function AllArticles() {
 
   // Fetch all articles
   const { data: articles = [], isLoading } = useQuery({
-    queryKey: ["all-articles"],
-    queryFn: async () => {
-      const res = await axiosSecure.get("/articles");
-      return res.data;
-    },
-  });
+  queryKey: ["all-articles"],
+  queryFn: async () => {
+    const res = await axiosSecure.get("/admin/articles");
+    return res.data;
+  },
+});
   console.log(articles);
 
   // Approve article
@@ -88,7 +88,7 @@ export default function AllArticles() {
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto cabin">
       <h2 className="text-2xl font-bold mb-4">All Articles</h2>
       <table className="min-w-full bg-white dark:bg-[#223A5E] rounded-xl shadow">
         <thead>
@@ -118,7 +118,7 @@ export default function AllArticles() {
               <td className="p-3">{a.authorEmail || "N/A"}</td>
               <td className="p-3">
                 {a.authorPhoto ? (
-                  <img src={a.authorPhoto} alt="Author" className="w-10 h-10 rounded-full" />
+                  <img src={a.authorPhoto} alt="Author" className="w-10 h-10 rounded-full object-cover" />
                 ) : (
                   <span>N/A</span>
                 )}

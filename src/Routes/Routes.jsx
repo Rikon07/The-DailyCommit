@@ -21,6 +21,7 @@ import AllArticle from "../Pages/Home pages/AllArticle";
 import ArticleDetails from "../Pages/Home pages/ArticleDetails";
 import PremiumArticles from "../Pages/Home pages/PremiumArticles";
 import MyArticles from "../Pages/Home pages/MyArticles";
+import UpdateArticle from "../Pages/Home pages/UpdateArticle";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 const router = createBrowserRouter([
@@ -66,6 +67,14 @@ const router = createBrowserRouter([
         Component: () => (
           <PrivateRoute>
             <MyArticles />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/update-article/:id",
+        Component: () => (
+          <PrivateRoute>
+            <UpdateArticle />
           </PrivateRoute>
         ),
       },

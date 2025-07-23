@@ -1,4 +1,3 @@
-import React from "react";
 import { Navigate, useLocation } from "react-router";
 import Loader from "../Components/Extra Components/Loader";
 import useAuth from "../Hooks/UseAuth";

@@ -23,6 +23,7 @@
     "motion": "^12.23.5",
     "react": "^19.1.0",
     "react-awesome-reveal": "^4.3.1",
+    "react-countup": "^6.5.3",
     "react-dom": "^19.1.0",
     "react-fast-marquee": "^1.6.5",
     "react-google-charts": "^5.2.1",

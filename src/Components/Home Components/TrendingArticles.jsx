@@ -34,6 +34,7 @@ export default function TrendingArticles({ userInfo }) {
 
   return (
     <div className="bg-[#D0E7F9]/30 dark:bg-[#0F172A] border-t border-[#38BDF8]/20 dark:border-[#1e293b]">
+
       <section className="max-w-5xl cabin mx-auto py-12 md:py-16 px-3 md:px-6 relative">
         <div className="text-center mb-8">
             <h2 className="text-2xl md:text-3xl font-bold text-center text-[#0F172A] dark:text-[#D0E7F9]">

@@ -63,31 +63,26 @@ const saveUserToDB = async (user) => {
   };
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const email = form.email.value.trim();
-    const password = form.password.value;
+  e.preventDefault();
+  const form = e.target;
+  const email = form.email.value.trim();
+  const password = form.password.value;
 
-    setLoading(true);
-    try {
-      const result = await signIn(email, password);
-      await saveUserToDB(result.user);
-      await checkAndExpirePremium(result.user.email);
-      showAlert("Welcome Back!", `Logged in as ${result.user.displayName}`, "success");
-      navigate(location.state?.from || "/", { replace: true });
-    } catch (err) {
-      setError(err.message);
-      setLoading(false);
-      // navigate("/login");
-      showAlert("Login Failed", "Wrong Credentials", "error");
-      navigate(location.state?.from || "/", { replace: true });
-      
-      
-    }
-    //  finally {
-    //   setLoading(false);
-    // }
-  };
+  setLoading(true);
+  setError("");
+  try {
+    const result = await signIn(email, password);
+    await saveUserToDB(result.user);
+    await checkAndExpirePremium(result.user.email);
+    showAlert("Welcome Back!", `Logged in as ${result.user.displayName}`, "success");
+    setLoading(false);
+    navigate(location.state?.from || "/", { replace: true });
+  } catch (err) {
+    setError("Wrong credentials. Please try again.");
+    setLoading(false);
+    showAlert("Login Failed", "Wrong Credentials", "error");
+  }
+};
 
   const handleGoogleLogin = async () => {
     setLoading(true);

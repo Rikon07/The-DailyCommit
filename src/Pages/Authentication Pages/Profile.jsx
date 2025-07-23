@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Tooltip } from "react-tooltip";
 import { FaPen } from "react-icons/fa";
 import useAuth from "../../Hooks/UseAuth";
+import axios from "../../Hooks/Axios";
 
 const Profile = () => {
   const { user, setUser, updateUser } = useAuth();
@@ -11,20 +12,26 @@ const Profile = () => {
   const [photoURL, setPhotoURL] = useState(user?.photoURL || "");
   const [editing, setEditing] = useState(false);
 
-  const handleUpdate = (e) => {
-    e.preventDefault();
+  const handleUpdate = async (e) => {
+  e.preventDefault();
 
-    updateUser({ displayName: name, photoURL })
-      .then(() => {
-        setUser({ ...user, displayName: name, photoURL });
-        toast.success("Profile updated successfully!");
-        setEditing(false);
-      })
-      .catch((error) => {
-        console.error("Failed to update profile:", error);
-        toast.error("Failed to update profile.");
-      });
-  };
+  try {
+    await updateUser({ displayName: name, photoURL });
+    setUser({ ...user, displayName: name, photoURL });
+
+    // Update MongoDB as well
+    await axios.patch(
+      `/users/${user.email}`,
+      { name, photo: photoURL }
+    );
+
+    toast.success("Profile updated successfully!");
+    setEditing(false);
+  } catch (error) {
+    console.error("Failed to update profile:", error);
+    toast.error("Failed to update profile.");
+  }
+};
 
   return (
     <div className="min-h-[60vh] cabin transition-all duration-300 mt-16 lg:mt-[74px] bg-gradient-to-t from-white/60 via-[#38BDF8]/20 to-white/60 dark:bg-gradient-to-t dark:from-[#0F172A] dark:via-[#052f43] dark:to-[#0F172A]">

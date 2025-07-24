@@ -6,20 +6,26 @@ import { useState } from "react";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import { Tooltip } from "react-tooltip";
-
+import Pagination from "../../Components/Dashboard Components/Pagination";
 export default function AllArticles() {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
-  const [declineId, setDeclineId] = useState(null);
+  // const [declineId, setDeclineId] = useState(null);
+  const [page, setPage] = useState(1);
+  const limit = 8;
 
   // Fetch all articles
-  const { data: articles = [], isLoading } = useQuery({
-    queryKey: ["all-articles"],
+  const { data, isLoading } = useQuery({
+    queryKey: ["all-articles", page],
     queryFn: async () => {
-      const res = await axiosSecure.get("/admin/articles");
+      const res = await axiosSecure.get(`/admin/articles?page=${page}&limit=${limit}`);
       return res.data;
     },
+    keepPreviousData: true,
   });
+
+  const articles = data?.articles || [];
+  const total = data?.total || 0;
 
   // Approve article
   const approveMutation = useMutation({
@@ -40,7 +46,7 @@ export default function AllArticles() {
     onSuccess: () => {
       toast.info("Article declined.");
       queryClient.invalidateQueries(["all-articles"]);
-      setDeclineId(null);
+      // setDeclineId(null);
     },
   });
 
@@ -294,6 +300,7 @@ export default function AllArticles() {
           </tbody>
         </table>
       </div>
+       <Pagination page={page} total={total} limit={limit} setPage={setPage} />
     </div>
   );
 }

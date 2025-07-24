@@ -3,17 +3,26 @@ import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { toast } from "react-toastify";
 import Skeleton from "react-loading-skeleton";
 import { FaUserShield } from "react-icons/fa6";
+import { useState } from "react";
+import Pagination from "../../Components/Dashboard Components/Pagination";
 export default function AllUsers() {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
 
-  const { data: users = [], isLoading } = useQuery({
-    queryKey: ["users"],
+  const [page, setPage] = useState(1);
+  const limit = 7;
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["users", page],
     queryFn: async () => {
-      const res = await axiosSecure.get("/users");
+      const res = await axiosSecure.get(`/users?page=${page}&limit=${limit}`);
       return res.data;
     },
+    keepPreviousData: true,
   });
+
+  const users = data?.users || [];
+  const total = data?.total || 0;
 
   const makeAdminMutation = useMutation({
     mutationFn: async (email) => {
@@ -103,6 +112,7 @@ export default function AllUsers() {
         </tbody>
       </table>
     </div>
+    <Pagination page={page} total={total} limit={limit} setPage={setPage} />
     </div>
     </div>
   );

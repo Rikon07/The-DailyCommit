@@ -72,6 +72,8 @@ const saveUserToDB = async (user) => {
   setError("");
   try {
     const result = await signIn(email, password);
+    const token = await result.user.getIdToken();
+    localStorage.setItem("access-token", token);
     await saveUserToDB(result.user);
     await checkAndExpirePremium(result.user.email);
     showAlert("Welcome Back!", `Logged in as ${result.user.displayName}`, "success");

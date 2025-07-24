@@ -3,10 +3,19 @@ import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import CountUp from "react-countup";
 import { FaUsers, FaUserCheck, FaUser } from "react-icons/fa6";
 import { motion } from "framer-motion";
-
+import { useRef, useEffect } from "react";
+import gsap from "gsap";
 export default function Statistics() {
   const axiosSecure = useAxiosSecure();
+const statsRef = useRef(null);
 
+  useEffect(() => {
+    gsap.fromTo(
+      statsRef.current,
+      { opacity: 0, y: 40 },
+      { opacity: 1, y: 0, duration: 1, delay: 0.6, ease: "power2.out" }
+    );
+  }, []);
   const { data: stats = {}, isLoading } = useQuery({
     queryKey: ["user-stats"],
     queryFn: async () => {
@@ -40,7 +49,7 @@ export default function Statistics() {
   ];
 
   return (
-    <div className="bg-[#D0E7F9]/30 dark:bg-[#0F172A] border-t border-[#38BDF8]/20">
+    <div ref={statsRef} className="bg-[#D0E7F9]/30 dark:bg-[#0F172A] border-t border-[#38BDF8]/20">
         <section className=" max-w-5xl cabin mx-auto py-12 md:py-15 px-3 md:px-6">
       <div className="mb-4">
         <h2 className="text-2xl md:text-3xl font-bold text-center text-[#0F172A] dark:text-[#D0E7F9]">
@@ -55,7 +64,7 @@ export default function Statistics() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: idx * 0.1 }}
-            className={`rounded-2xl shadow-xl p-4 flex flex-col items-center border-2 ${card.bg} ${card.border}`}
+            className={`rounded-2xl shadow-xl p-4 flex flex-col items-center hover:scale-101 transition-transform duration-150 border-2 ${card.bg} ${card.border}`}
           >
             <div className="mb-4">{card.icon}</div>
             <div className="text-4xl font-extrabold text-[#38BDF8] dark:text-yellow-400 mb-2">

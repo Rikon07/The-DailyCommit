@@ -50,7 +50,7 @@ export default function DashboardSidebar({ open, setOpen }) {
               key={item.to}
               to={item.to}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-2 rounded-lg transition font-medium
+                `flex items-center gap-3 px-4 py-2 rounded-lg transition font-medium delay-500
                 ${isActive ? "bg-[#38BDF8] text-white" : "text-[#0F172A] dark:text-[#D0E7F9] hover:bg-[#38BDF8]/10"}
                 group relative
                 `

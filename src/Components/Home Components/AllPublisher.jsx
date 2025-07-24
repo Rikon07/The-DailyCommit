@@ -4,10 +4,19 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import { motion, AnimatePresence } from "framer-motion";
-
+import { useRef, useEffect } from "react";
+import gsap from "gsap";
 export default function AllPublisher() {
   const axiosSecure = useAxiosSecure();
+const pubRef = useRef(null);
 
+useEffect(() => {
+    gsap.fromTo(
+      pubRef.current,
+      { opacity: 0, scale: 0.95 },
+      { opacity: 1, scale: 1, duration: 1, delay: 0.4, ease: "power2.out" }
+    );
+  }, []);
   // Fetch all publishers
   const { data: publishers = [], isLoading } = useQuery({
     queryKey: ["all-publishers"],
@@ -18,7 +27,7 @@ export default function AllPublisher() {
   });
 
   return (
-    <div className="bg-[#D0E7F9]/30 dark:bg-[#0F172A] border-t border-[#38BDF8]/20">
+    <div ref={pubRef} className="bg-[#D0E7F9]/30 dark:bg-[#0F172A] border-t border-[#38BDF8]/20">
         <section className="max-w-5xl cabin mx-auto py-10 md:py-14 px-3 md:px-6">
       <div className="mb-4">
         <h2 className="text-2xl md:text-3xl font-bold text-center text-[#0F172A] dark:text-[#D0E7F9]">

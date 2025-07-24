@@ -2,9 +2,19 @@ import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { motion } from "framer-motion";
 import { FaCrown } from "react-icons/fa6";
-
+import { useRef, useEffect } from "react";
+import gsap from "gsap";
 export default function TopContributors() {
   const axiosSecure = useAxiosSecure();
+const contribRef = useRef(null);
+
+  useEffect(() => {
+    gsap.fromTo(
+      contribRef.current,
+      { opacity: 0, y: 40 },
+      { opacity: 1, y: 0, duration: 1, delay: 1, ease: "power2.out" }
+    );
+  }, []);
 
   // Fetch top contributors
   const { data: contributors = [], isLoading } = useQuery({
@@ -17,7 +27,7 @@ export default function TopContributors() {
   console.log("Top Contributors:", contributors);
 
   return (
-    <div className="bg-[#D0E7F9]/30 dark:bg-[#0F172A] border-t border-[#38BDF8]/20">
+    <div ref={contribRef} className="bg-[#D0E7F9]/30 dark:bg-[#0F172A] border-t border-[#38BDF8]/20">
         <section className="cabin max-w-5xl mx-auto py-12 px-4">
       <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 text-[#0F172A] dark:text-[#D0E7F9]">
         Top Contributors

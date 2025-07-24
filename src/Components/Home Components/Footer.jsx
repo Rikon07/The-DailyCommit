@@ -1,16 +1,30 @@
+import { useRef, useEffect } from "react";
+import gsap from "gsap";
 import { Link } from "react-router-dom";
 import { FaGithub, FaLinkedin, FaInstagram, FaYoutube, FaFacebook } from "react-icons/fa";
 import { motion } from "framer-motion";
 
 const Footer = () => {
-  return (
-    <footer className="bg-gradient-to-t from-white/30 via-[#1E293B]/20 to-white/30 dark:from-[#0F172A] dark:via-[#01202e] dark:to-[#0F172A] transition-colors duration-500 cabin">
-      <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+  const footerRef = useRef(null);
 
+  useEffect(() => {
+    gsap.fromTo(
+      footerRef.current,
+      { opacity: 0, y: 40 },
+      { opacity: 1, y: 0, duration: 1, delay: 1.2, ease: "power2.out" }
+    );
+  }, []);
+
+  return (
+    <footer
+      ref={footerRef}
+      className="bg-gradient-to-t from-white/30 via-[#1E293B]/20 to-white/30 dark:from-[#0F172A] dark:via-[#01202e] dark:to-[#0F172A] transition-colors duration-500 cabin"
+    >
+      <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
         {/* Logo + Description */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }} 
-          animate={{ opacity: 1, y: 0 }} 
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
           <Link
@@ -27,9 +41,9 @@ const Footer = () => {
         </motion.div>
 
         {/* Quick Links */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }} 
-          animate={{ opacity: 1, y: 0 }} 
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
           <h3 className="text-lg font-semibold mb-3 text-[#0F172A] dark:text-[#38BDF8]">Quick Links</h3>
@@ -41,23 +55,23 @@ const Footer = () => {
         </motion.div>
 
         {/* Resources or Extra Links */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }} 
-          animate={{ opacity: 1, y: 0 }} 
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
         >
           <h3 className="text-lg font-semibold mb-3 text-[#0F172A] dark:text-[#38BDF8]">Resources</h3>
           <ul className="space-y-2 text-slate-600 dark:text-slate-300">
-            <li><a href="#" className="hover:text-black dark:hover:text-white">Write for Us</a></li>
+            <li><a href="/add-article" className="hover:text-black dark:hover:text-white">Write for Us</a></li>
             <li><a href="#" className="hover:text-black dark:hover:text-white">Privacy Policy</a></li>
             <li><a href="#" className="hover:text-black dark:hover:text-white">Terms of Use</a></li>
           </ul>
         </motion.div>
 
         {/* Socials */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }} 
-          animate={{ opacity: 1, y: 0 }} 
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
           <h3 className="text-lg font-semibold mb-3 text-[#0F172A] dark:text-[#38BDF8]">Connect</h3>

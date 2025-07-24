@@ -88,83 +88,94 @@ const Navbar = () => {
     setIsDropdownOpen(false);
   }, [location.pathname]);
 
+  // const navLinkStyle = ({ isActive }) =>
+  //   `transition-colors duration-200 hover:text-[#38BDF8] ${
+  //     isActive ? "font-bold underline underline-offset-4 text-[#38BDF8]" : ""
+  //   }`;
   const navLinkStyle = ({ isActive }) =>
-    `transition-colors duration-200 hover:text-[#38BDF8] ${
-      isActive ? "font-bold underline underline-offset-4 text-[#38BDF8]" : ""
-    }`;
+  `transition-colors duration-200 hover:text-[#38BDF8] px-3 py-1 rounded-lg text-[#0F172A] dark:text-[#D0E7F9]
+   ${isActive
+      ? "font-bold border text-[#38BDF8] border-[#38BDF8]/40 dark:bg-[#223A5E]/40 shadow backdrop-blur-xl"
+      : ""} ${!isActive ? "hover:underline underline-offset-4 transition-colors duration-200" : ""}`;
 
   // Desktop Links
   const Links = (
-    <>
-      <li>
-        <NavLink to="/" className={navLinkStyle}>
-          Home
-        </NavLink>
-      </li>
-      {/* Articles Dropdown (hover) */}
-      <li
-        className="relative group"
-        onMouseEnter={() => setIsDropdownOpen(true)}
-        onMouseLeave={() => setIsDropdownOpen(false)}
+  <>
+    <li>
+      <NavLink to="/" className={navLinkStyle}>
+        Home
+      </NavLink>
+    </li>
+    {/* Articles Dropdown (hover) */}
+    <li
+      className="relative group"
+      onMouseEnter={() => setIsDropdownOpen(true)}
+      onMouseLeave={() => setIsDropdownOpen(false)}
+    >
+      <button
+        className="flex items-center gap-1 transition-colors duration-200 hover:text-[#38BDF8] font-medium hover:underline underline-offset-4"
+        type="button"
       >
-        <button
-          className="flex items-center gap-1 transition-colors duration-200 hover:text-[#38BDF8] font-medium"
-          type="button"
-        >
-          Articles
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path d="M19 9l-7 7-7-7" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </button>
-        <AnimatePresence>
-          {isDropdownOpen && (
-            <motion.ul
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              transition={{ duration: 0.2 }}
-              className="absolute text-sm left-0 mt-3 w-56 bg-white/95 dark:bg-[#223A5E] rounded-xl shadow-2xl ring-1 ring-[#38BDF8]/30 z-50 py-2"
-            >
-              <li>
-                <NavLink to="/articles" className="block px-5 py-2 hover:bg-[#38BDF8]/10 dark:hover:bg-[#38BDF8]/20 hover:text-[#38BDF8] rounded-lg transition">
-                  All Articles
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/add-article" className="block px-5 py-2 hover:bg-[#38BDF8]/10 dark:hover:bg-[#38BDF8]/20 rounded-lg transition hover:text-[#38BDF8]">
-                  Add Article
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/my-articles" className="block px-5 py-2 hover:bg-[#38BDF8]/10 dark:hover:bg-[#38BDF8]/20 rounded-lg transition hover:text-[#38BDF8]">
-                  My Articles
-                </NavLink>
-              </li>
-            </motion.ul>
-          )}
-        </AnimatePresence>
-      </li>
+        Articles
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M19 9l-7 7-7-7" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
+      <AnimatePresence>
+        {isDropdownOpen && (
+          <motion.ul
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.2 }}
+            className="absolute text-sm left-0 mt-3 w-56 bg-white/95 dark:bg-[#223A5E] rounded-xl shadow-2xl ring-1 ring-[#38BDF8]/30 z-50 py-2"
+          >
+            <li>
+              <NavLink to="/articles" className="block px-5 py-2 hover:bg-[#38BDF8]/10 dark:hover:bg-[#38BDF8]/20 hover:text-[#38BDF8] rounded-lg transition">
+                All Articles
+              </NavLink>
+            </li>
+            {user && (
+              <>
+                <li>
+                  <NavLink to="/add-article" className="block px-5 py-2 hover:bg-[#38BDF8]/10 dark:hover:bg-[#38BDF8]/20 rounded-lg transition hover:text-[#38BDF8]">
+                    Add Article
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/my-articles" className="block px-5 py-2 hover:bg-[#38BDF8]/10 dark:hover:bg-[#38BDF8]/20 rounded-lg transition hover:text-[#38BDF8]">
+                    My Articles
+                  </NavLink>
+                </li>
+              </>
+            )}
+          </motion.ul>
+        )}
+      </AnimatePresence>
+    </li>
+    {user && (
       <li>
         <NavLink to="/subscription" className={navLinkStyle}>
           Subscription
         </NavLink>
       </li>
-      {isAdmin && (
-        <li>
-          <NavLink to="/dashboard" className={navLinkStyle}>
-            Dashboard
-          </NavLink>
-        </li>
-      )}
-      {isPremium && (
-        <li>
-          <NavLink to="/premium-articles" className={navLinkStyle}>
-            Premium Articles
-          </NavLink>
-        </li>
-      )}
-    </>
-  );
+    )}
+    {isAdmin && (
+      <li>
+        <NavLink to="/dashboard" className={navLinkStyle}>
+          Dashboard
+        </NavLink>
+      </li>
+    )}
+    {isPremium && (
+      <li>
+        <NavLink to="/premium-articles" className={navLinkStyle}>
+          Premium Articles
+        </NavLink>
+      </li>
+    )}
+  </>
+);
 
   return (
     <motion.nav
@@ -269,52 +280,58 @@ const Navbar = () => {
             <ThemeToggle />
             <ul className="space-y-2 text-[#0F172A] dark:text-[#D0E7F9]">
               <li>
-                <NavLink to="/" className={navLinkStyle}>
-                  Home
-                </NavLink>
-              </li>
-              {/* Articles Dropdown for mobile */}
-              <li>
-                <details>
-                  <summary className="cursor-pointer">Articles</summary>
-                  <ul className="ml-4 space-y-1">
-                    <li>
-                      <NavLink to="/articles" className={navLinkStyle}>
-                        All Articles
-                      </NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/add-article" className={navLinkStyle}>
-                        Add Article
-                      </NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/my-articles" className={navLinkStyle}>
-                        My Articles
-                      </NavLink>
-                    </li>
-                  </ul>
-                </details>
-              </li>
-              <li>
-                <NavLink to="/subscription" className={navLinkStyle}>
-                  Subscription
-                </NavLink>
-              </li>
-              {isAdmin && (
-                <li>
-                  <NavLink to="/dashboard" className={navLinkStyle}>
-                    Dashboard
-                  </NavLink>
-                </li>
-              )}
-              {isPremium && (
-                <li>
-                  <NavLink to="/premium-articles" className={navLinkStyle}>
-                    Premium Articles
-                  </NavLink>
-                </li>
-              )}
+    <NavLink to="/" className={navLinkStyle}>
+      Home
+    </NavLink>
+  </li>
+  {/* Articles Dropdown for mobile */}
+  <li>
+    <details>
+      <summary className="cursor-pointer">Articles</summary>
+      <ul className="ml-4 space-y-1">
+        <li>
+          <NavLink to="/articles" className={navLinkStyle}>
+            All Articles
+          </NavLink>
+        </li>
+        {user && (
+          <>
+            <li>
+              <NavLink to="/add-article" className={navLinkStyle}>
+                Add Article
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/my-articles" className={navLinkStyle}>
+                My Articles
+              </NavLink>
+            </li>
+          </>
+        )}
+      </ul>
+    </details>
+  </li>
+  {user && (
+    <li>
+      <NavLink to="/subscription" className={navLinkStyle}>
+        Subscription
+      </NavLink>
+    </li>
+  )}
+  {isAdmin && (
+    <li>
+      <NavLink to="/dashboard" className={navLinkStyle}>
+        Dashboard
+      </NavLink>
+    </li>
+  )}
+  {isPremium && (
+    <li>
+      <NavLink to="/premium-articles" className={navLinkStyle}>
+        Premium Articles
+      </NavLink>
+    </li>
+  )}
               {user && (
                 <li>
                   <Link to="/profile" className="flex items-center gap-2">

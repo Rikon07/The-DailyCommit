@@ -1,19 +1,25 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "react-router-dom";
-import { FaArrowDown } from "react-icons/fa6";
+import { FaArrowDown, FaFire, FaGlobe, FaCode } from "react-icons/fa6";
 import clsx from "clsx";
 import { Typewriter } from "react-simple-typewriter";
 import gsap from "gsap";
 
 const headlines = [
-  "Stay Ahead With Dev News",
+  "Stay Ahead with Global Dev News",
   "Code Smarter, Read Faster",
   "Push Knowledge. Pull Headlines.",
-  "Your Daily Dose of Developer News",
-  "Articles Written by Devs, for Devs",
-  "Explore Open Source Stories",
-  "Daily Commits from Global Devs",
+  "Your Daily Dose of CS & Tech News",
+  "Articles by Developers, for Developers",
+  "Explore Open Source Breakthroughs",
+  "Daily Commits from the World of Tech",
+];
+
+const typewriterLines = [
+  "Powered by Devs, Loved by Readers",
+  "One Platform. Infinite Commits.",
+  "Where Code Meets Community",
+  "Your Source for Real-Time CS News",
 ];
 
 const Banner = () => {
@@ -30,13 +36,14 @@ const Banner = () => {
   useEffect(() => {
     gsap.fromTo(
       bannerRef.current,
-      { opacity: 0, y: 30 },
+      { opacity: 0, y: 10 },
       { opacity: 1, y: 0, duration: 1.5, ease: "power2.out" }
     );
   }, []);
 
+  // Scroll to the next section
   const scrollToSection = () => {
-    const nextSection = document.getElementById("news-section");
+    const nextSection = document.getElementById("trending");
     if (nextSection) {
       nextSection.scrollIntoView({ behavior: "smooth" });
     }
@@ -50,14 +57,38 @@ const Banner = () => {
       {/* Background Image */}
       <div className="absolute inset-0">
         <img
-          src='https://i.pinimg.com/originals/6a/e0/9d/6ae09d56f3894692b0c0c735a9882916.gif'
-          // src="https://i.pinimg.com/originals/68/0b/eb/680beb29a683b6624393df56ac23e9bf.gif"
-        //   https://i.pinimg.com/originals/86/e9/db/86e9db1eba21c663ccd6ee49a146503f.gif
+          src="https://i.pinimg.com/originals/6a/e0/9d/6ae09d56f3894692b0c0c735a9882916.gif"
           alt="News background"
           className="w-full h-full object-cover object-center opacity-60"
         />
         <div className="absolute inset-0 bg-white/60 dark:bg-[#0F172A]/80 backdrop-blur-sm"></div>
       </div>
+
+      {/* Floating icons for extra animation */}
+      <motion.div
+        className="absolute left-10 top-24 z-10"
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 0.1 }}
+        transition={{ delay: 0.5, duration: 1.2, type: "spring" }}
+      >
+        <FaFire className="text-[#38BDF8] text-4xl animate-pulse" />
+      </motion.div>
+      <motion.div
+        className="absolute right-10 top-24 z-10"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 0.2 }}
+        transition={{ delay: 0.7, duration: 1.2, type: "spring" }}
+      >
+        <FaGlobe className="text-[#0EA5E9] text-3xl animate-spin-slow" />
+      </motion.div>
+      <motion.div
+        className="absolute left-1/2 bottom-62 z-10"
+        initial={{ scale: 0.7, opacity: 0 }}
+        animate={{ scale: 1, opacity: 0.4 }}
+        transition={{ delay: 1, duration: 1.2, type: "spring" }}
+      >
+        <FaCode className="text-[#38BDF8] text-3xl" />
+      </motion.div>
 
       {/* Content */}
       <div className="relative z-10 max-w-7xl px-4">
@@ -84,11 +115,13 @@ const Banner = () => {
                       "global",
                       "read",
                       "knowledge.",
-                      "devs"
+                      "devs",
+                      "tech",
+                      "commits",
                     ].includes(word.toLowerCase()),
                   })}
                 >
-                  {word} {" "}
+                  {word}{" "}
                 </span>
               ))}
             </motion.h1>
@@ -96,13 +129,9 @@ const Banner = () => {
         </div>
 
         {/* Typewriter Extra Line */}
-        <div className="mt-4 text-lg sm:text-xl md:text-2xl font-light text-[#475569] dark:text-[#CBD5E1]">
+        <div className="mt-4 text-xl md:text-2xl font-light text-[#475569] dark:text-[#CBD5E1]">
           <Typewriter
-            words={[
-              "Powered by Devs, Loved by Readers",
-              "One Platform. Infinite Commits.",
-              "Where Code Meets Community",
-            ]}
+            words={typewriterLines}
             loop={true}
             cursor
             cursorStyle="_"
@@ -113,27 +142,29 @@ const Banner = () => {
         </div>
 
         {/* Description */}
-        <p className="mt-6 text-base sm:text-lg text-[#334155] dark:text-[#94A3B8] max-w-xl mx-auto font-light">
-          The Daily Commit brings you real-time dev news, open-source stories,
-          and developer-driven insights from around the globe — every single day.
+        <p className="mt-6 text-sm md:text-base text-[#334155] dark:text-[#94A3B8] max-w-xl mx-auto font-light">
+          The Daily Commit brings you real-time computer science news,
+          open-source breakthroughs, and developer-driven insights from around
+          the globe — every day.
         </p>
 
-        {/* Button */}
-        <div className="mt-8 flex justify-center">
+        {/* Trending Button */}
+        {/* <div className="mt-8 flex justify-center">
           <button
             onClick={scrollToSection}
-            className="bg-[#38BDF8] hover:bg-[#0EA5E9] text-white text-sm px-8 py-2 rounded-full sfpro shadow transition"
+            className="relative inline-flex items-center gap-2 px-8 py-3 font-semibold text-white bg-gradient-to-tr from-[#38BDF8] via-[#0EA5E9] to-[#38BDF8] rounded-full shadow-lg hover:scale-105 transition-all"
           >
-            🔍 Discover
+            <FaFire className="text-yellow-400 animate-pulse" />
+            <span>See What’s Trending</span>
           </button>
-          {/* <button className="relative inline-flex items-center gap-2 px-6 py-3 font-semibold text-slate-50 bg-gradient-to-tr from-slate-900/30 via-slate-900/70 to-slate-900/30 ring-4 ring-slate-900/20 rounded-full overflow-hidden hover:opacity-90 transition-opacity before:absolute before:top-4 before:left-1/2 before:-translate-x-1/2 before:w-[100px] before:h-[100px] before:rounded-full before:bg-gradient-to-b before:from-slate-50/10 before:blur-xl">
-      Explore discoveries
-    </button> */}
-        </div>
+        </div> */}
       </div>
 
       {/* Scroll Icon */}
-      <div className="absolute bottom-8 z-10 cursor-pointer" onClick={scrollToSection}>
+      <div
+        className="absolute left-1/2 bottom-8 z-10 cursor-pointer"
+        onClick={scrollToSection}
+      >
         <FaArrowDown className="text-[#38BDF8] animate-bounce text-xl" />
       </div>
     </section>

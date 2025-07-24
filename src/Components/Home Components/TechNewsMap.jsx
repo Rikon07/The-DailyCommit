@@ -2,8 +2,9 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { Icon } from "leaflet";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import "leaflet/dist/leaflet.css";
+import { useRef, useEffect } from "react";
+import gsap from "gsap";
 
-// Demo articles with Bangladesh locations
 const BD_ARTICLES = [
   {
     title: "Dhaka AI Conference 2024",
@@ -88,9 +89,17 @@ const markerIcon = new Icon({
 export default function TechNewsMap() {
   // Center on Bangladesh
   const center = [23.685, 90.3563];
+const mapRef = useRef(null);
 
+  useEffect(() => {
+    gsap.fromTo(
+      mapRef.current,
+      { opacity: 0, y: 40 },
+      { opacity: 1, y: 0, duration: 1, delay: 0.8, ease: "power2.out" }
+    );
+  }, []);
   return (
-    <div className='bg-[#D0E7F9]/30 cabin dark:bg-[#0F172A] border-t border-[#38BDF8]/20'>
+    <div ref={mapRef} className='bg-[#D0E7F9]/30 cabin dark:bg-[#0F172A] border-t border-[#38BDF8]/20'>
       <section className="max-w-5xl mx-auto py-12 px-4">
       <div className="flex items-center gap-2 mb-4 justify-center">
         <FaMapMarkerAlt className="text-2xl text-[#38BDF8]" />

@@ -92,7 +92,7 @@ const Subscription = () => {
           className="bg-[#D0E7F9]/90 dark:bg-[#1e293b]/90 rounded-2xl shadow-xl p-8 w-full max-w-sm flex flex-col gap-6"
           style={{ backdropFilter: "blur(6px)" }}
         >
-          <h2 className="text-xl font-bold text-center mb-2 text-[#0F172A] dark:text-[#38BDF8]">
+          <h2 className="text-xl font-bold text-center mb-2 text-[#0F172A] dark:text-[#D0E7F9]">
             Your Card Information
           </h2>
           <div className="mb-2">
@@ -101,8 +101,8 @@ const Subscription = () => {
                 style: {
                   base: {
                     fontSize: "18px",
-                    color: "#0F172A",
-                    "::placeholder": { color: "#38BDF8" },
+                    color: "#38BDF8",
+                    "::placeholder": { color: "#D0E7F9" },
                     backgroundColor: "transparent",
                   },
                   invalid: { color: "#e53e3e" },

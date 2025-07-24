@@ -1,48 +1,48 @@
-import { useEffect } from 'react';
-import axios from 'axios';
-import useAuth from './UseAuth';
+import { useEffect } from "react";
+import axios from "axios";
+import useAuth from "./UseAuth";
 
 const axiosSecure = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: "http://localhost:3000",
 });
 
 const useAxiosSecure = () => {
-  const { user, logOut } = useAuth();
-  //  console.log(user);
+  const { logOut } = useAuth();
 
   useEffect(() => {
+    // Request interceptor: add JWT from localStorage
     const requestInterceptor = axiosSecure.interceptors.request.use(
       (config) => {
-        if (user?.accessToken) {
-          config.headers.Authorization = `Bearer ${user.accessToken}`;
+        const token = localStorage.getItem("access-token");
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
         }
         return config;
       },
       (error) => Promise.reject(error)
     );
 
+    // Response interceptor: log out only on real auth errors
     const responseInterceptor = axiosSecure.interceptors.response.use(
       (response) => response,
       (error) => {
         const status = error?.response?.status;
-        if (status === 401 || status === 403) {
-          logOut()
-            .then(() => {
-              console.warn("Unauthorized. Logging out.");
-            })
-            .catch((err) => {
-              console.error("Logout failed:", err);
-            });
+        if (
+          (status === 401 || status === 403) &&
+          error?.response?.data?.message === "Unauthorized"
+        ) {
+          logOut();
         }
         return Promise.reject(error);
       }
     );
 
+    // Cleanup
     return () => {
       axiosSecure.interceptors.request.eject(requestInterceptor);
       axiosSecure.interceptors.response.eject(responseInterceptor);
     };
-  }, [user, logOut]);
+  }, [logOut]);
 
   return axiosSecure;
 };

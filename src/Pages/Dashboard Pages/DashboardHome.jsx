@@ -14,13 +14,15 @@ export default function DashboardHome() {
       return res.data;
     },
   });
-  const { data: users = [] } = useQuery({
+  const { data: user = [] } = useQuery({
     queryKey: ["dashboard-users"],
     queryFn: async () => {
       const res = await axiosSecure.get("/users");
       return res.data;
     },
   });
+  // console.log(user.total);
+  // const totalUser = users.users.length;
 
   // Pie chart data: publisher distribution
   const publisherCounts = {};
@@ -61,7 +63,7 @@ export default function DashboardHome() {
         </div>
         <div className="bg-white/80 dark:bg-[#223A5E]/80 rounded-xl shadow p-4 flex flex-col items-center">
           <FaUsers className="text-2xl text-[#38BDF8] mb-2" />
-          <div className="text-2xl font-bold">{users.length}</div>
+          <div className="text-2xl font-bold">{user.total}</div>
           <div className="text-xs text-[#0F172A] dark:text-[#38BDF8]">Users</div>
         </div>
         {/* Add more summary cards as needed */}

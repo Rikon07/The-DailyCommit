@@ -12,6 +12,8 @@ const Profile = () => {
   const [photoURL, setPhotoURL] = useState(user?.photoURL || "");
   const [editing, setEditing] = useState(false);
 
+  // console.log(user);
+
   const handleUpdate = async (e) => {
   e.preventDefault();
 
@@ -34,7 +36,7 @@ const Profile = () => {
 };
 
   return (
-    <div className="min-h-[60vh] cabin transition-all duration-300 mt-16 lg:mt-[74px] bg-gradient-to-t from-white/60 via-[#38BDF8]/20 to-white/60 dark:bg-gradient-to-t dark:from-[#0F172A] dark:via-[#052f43] dark:to-[#0F172A]">
+    <div className="min-h-[62vh] cabin transition-all duration-300 mt-16 lg:mt-[74px] bg-gradient-to-t from-white/60 via-[#38BDF8]/20 to-white/60 dark:bg-gradient-to-t dark:from-[#0F172A] dark:via-[#052f43] dark:to-[#0F172A]">
       <section className="max-w-xl min-h-[55vh] mx-auto mt-16 p-8 backdrop-blur-lg bg-white/30 dark:bg-[#1E293B]/50 shadow-[0_8px_30px_rgb(0,0,0,0.12)] rounded-3xl transition-all duration-300 relative">
         <div className="flex flex-col items-center gap-4 relative">
           <motion.div
@@ -46,6 +48,7 @@ const Profile = () => {
             <img
               src={photoURL || "https://via.placeholder.com/150"}
               alt="Profile"
+              refferrer Policy="no-referrer"
               className="w-28 h-28 rounded-full border-4 border-[#38BDF8] object-cover shadow-lg"
               data-tooltip-id="profile-img"
               data-tooltip-content="Your profile picture"

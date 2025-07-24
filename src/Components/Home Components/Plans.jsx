@@ -1,6 +1,7 @@
 import { Check, X } from "lucide-react";
 import { useNavigate } from "react-router";
-
+import { useRef, useEffect } from "react";
+import gsap from "gsap";
 const plans = [
   {
     title: "Free Plan",
@@ -36,9 +37,17 @@ const plans = [
 
 const Plans = () => {
   const navigate = useNavigate();
+const plansRef = useRef(null);
 
+  useEffect(() => {
+    gsap.fromTo(
+      plansRef.current,
+      { opacity: 0, y: 40 },
+      { opacity: 1, y: 0, duration: 1, ease: "power2.out" }
+    );
+  }, []);
   return (
-    <section className="py-6 lg:py-16 bg-[#D0E7F9]/30 dark:bg-[#0F172A] cabin" data-aos="fade-up">
+    <section ref={plansRef} id="plans" className="py-6 lg:py-16 bg-[#D0E7F9]/30 dark:bg-[#0F172A] cabin" data-aos="fade-up">
       <div className="text-center mb-4">
         <h2 className="text-2xl lg:text-3xl font-bold text-[#0F172A] dark:text-[#D0E7F9]">Choose Your Plan</h2>
         <p className="text-[#475569] dark:text-[#94A3B8] mt-2 text-sm lg:text-base">Find what fits your content journey</p>

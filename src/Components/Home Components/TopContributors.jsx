@@ -14,6 +14,7 @@ export default function TopContributors() {
       return res.data;
     },
   });
+  console.log("Top Contributors:", contributors);
 
   return (
     <div className="bg-[#D0E7F9]/30 dark:bg-[#0F172A] border-t border-[#38BDF8]/20">
@@ -42,6 +43,7 @@ export default function TopContributors() {
                   <img
                     src={user.photo || "https://i.ibb.co/4f1z5xH/default-avatar.png"}
                     alt={user.name}
+                    referrerPolicy="no-referrer"
                     className="w-20 h-20 md:w-24 md:h-24 object-cover rounded-full border-4 border-[#38BDF8] shadow-lg bg-white dark:bg-[#223A5E]"
                   />
                   {idx === 0 && (

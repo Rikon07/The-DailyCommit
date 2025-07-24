@@ -3,7 +3,6 @@ import Select from "react-select";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { FileImage } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { motion } from "framer-motion";
 import Loader from "../../Components/Extra Components/Loader";

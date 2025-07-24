@@ -76,7 +76,7 @@ const AddArticle = () => {
   const [previewUrl, setPreviewUrl] = useState(null);
   const [publishers, setPublishers] = useState([]);
   const axiosSecure = useAxiosSecure();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { user } = useAuth();
 
   //   const [publishers, setPublishers] = useState([
@@ -154,26 +154,36 @@ const AddArticle = () => {
     };
 
     try {
-      const res = await axiosSecure.post("/articles", article);
-      if (res.data.insertedId) {
-        await Swal.fire({
-          title: "Submitted!",
-          text: "📰 Article submitted for approval!",
-          icon: "success",
-          confirmButtonColor: "#38BDF8",
-          background: "#D0E7F9",
-          color: "#0F172A",
-        });
-        reset();
-        setPreviewUrl(null);
-        // Optionally navigate to My Articles
-        // navigate("/my-articles");
-      }
-    } catch (err) {
-      toast.error("Something went wrong 😬");
-    } finally {
-      setLoading(false);
-    }
+  const res = await axiosSecure.post("/articles", article);
+  if (res.data.insertedId) {
+    await Swal.fire({
+      title: "Submitted!",
+      text: "📰 Article submitted for approval!",
+      icon: "success",
+      confirmButtonColor: "#38BDF8",
+      background: "#D0E7F9",
+      color: "#0F172A",
+    });
+    reset();
+    setPreviewUrl(null);
+  }
+} catch (err) {
+  // If backend sends a 403, show a friendly error
+  if (err.response && err.response.status === 403) {
+    await Swal.fire({
+      title: "Post Limit Reached",
+      text: err.response.data.message || "Normal users can only post 1 article.",
+      icon: "warning",
+      confirmButtonColor: "#38BDF8",
+      background: "#D0E7F9",
+      color: "#0F172A",
+    });
+  } else {
+    toast.error("Something went wrong 😬");
+  }
+} finally {
+  setLoading(false);
+}
   };
 
   if (loading) return <Loader />;

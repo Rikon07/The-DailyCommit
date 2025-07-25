@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "http://localhost:3000", 
+  baseURL: "https://the-daily-commit-server.vercel.app", 
   withCredentials: true,
 });
 

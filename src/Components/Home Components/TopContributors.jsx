@@ -24,7 +24,7 @@ const contribRef = useRef(null);
       return res.data;
     },
   });
-  console.log("Top Contributors:", contributors);
+  // console.log("Top Contributors:", contributors);
 
   return (
     <div ref={contribRef} className="bg-[#D0E7F9]/30 dark:bg-[#0F172A] border-t border-[#38BDF8]/20">

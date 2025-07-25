@@ -208,7 +208,7 @@ const AddArticle = () => {
         <input
           {...register("title", { required: "Title is required" })}
           placeholder="Article Title"
-          className="input-style input"
+          className="input-style input "
         />
         {errors.title && (
           <span className="text-red-500 text-xs">{errors.title.message}</span>

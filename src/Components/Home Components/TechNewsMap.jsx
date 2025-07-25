@@ -44,7 +44,7 @@ const BD_ARTICLES = [
   {
     title: "Barisal Data Science Day",
     city: "Barisal",
-    lat: 22.7010,
+    lat: 22.701,
     lng: 90.3535,
     publisher: "Data Science BD",
   },
@@ -89,7 +89,7 @@ const markerIcon = new Icon({
 export default function TechNewsMap() {
   // Center on Bangladesh
   const center = [23.685, 90.3563];
-const mapRef = useRef(null);
+  const mapRef = useRef(null);
 
   useEffect(() => {
     gsap.fromTo(
@@ -99,41 +99,50 @@ const mapRef = useRef(null);
     );
   }, []);
   return (
-    <div ref={mapRef} className='bg-[#D0E7F9]/30 cabin dark:bg-[#0F172A] border-t border-[#38BDF8]/20'>
+    <div
+      ref={mapRef}
+      className="bg-[#D0E7F9]/30 cabin dark:bg-[#0F172A] border-t border-[#38BDF8]/20"
+    >
       <section className="max-w-5xl mx-auto py-12 px-4">
-      <div className="flex items-center gap-2 mb-4 justify-center">
-        <FaMapMarkerAlt className="text-2xl text-[#38BDF8]" />
-        <span className="text-2xl md:text-3xl font-bold text-[#0F172A] dark:text-[#D0E7F9]">
-          Locations
-        </span>
-      </div>
-      <div className="w-full h-[400px] rounded-2xl overflow-hidden shadow-lg border-2 border-[#38BDF8]">
-        <MapContainer center={center} zoom={7} scrollWheelZoom={true} className="w-full h-full">
-          <TileLayer
-            attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>'
-            url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
-          />
-          {BD_ARTICLES.map((article, idx) => (
-            <Marker
-              key={idx}
-              position={[article.lat, article.lng]}
-              icon={markerIcon}
-            >
-              <Popup>
-                <div className="text-[#0F172A] dark:text-[#38BDF8]">
-                  <strong>{article.title}</strong>
-                  <br />
-                  <span className="text-xs">{article.city}, Bangladesh</span>
-                  <br />
-                  <span className="text-xs text-[#38BDF8]">{article.publisher}</span>
-                </div>
-              </Popup>
-            </Marker>
-          ))}
-        </MapContainer>
-      </div>
-    </section>
+        <div className="flex items-center gap-2 mb-4 justify-center">
+          <FaMapMarkerAlt className="text-2xl text-[#38BDF8]" />
+          <span className="text-2xl md:text-3xl font-bold text-[#0F172A] dark:text-[#D0E7F9]">
+            Locations
+          </span>
+        </div>
+        <div className="w-full h-[400px] rounded-2xl overflow-hidden shadow-lg border-2 border-[#38BDF8]">
+          <MapContainer
+            center={center}
+            zoom={7}
+            scrollWheelZoom={true}
+            className="w-full h-full"
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            {BD_ARTICLES.map((article, idx) => (
+              <Marker
+                key={idx}
+                position={[article.lat, article.lng]}
+                icon={markerIcon}
+              >
+                <Popup>
+                  <div className="text-[#0F172A] dark:text-[#38BDF8]">
+                    <strong>{article.title}</strong>
+                    <br />
+                    <span className="text-xs">{article.city}, Bangladesh</span>
+                    <br />
+                    <span className="text-xs text-[#38BDF8]">
+                      {article.publisher}
+                    </span>
+                  </div>
+                </Popup>
+              </Marker>
+            ))}
+          </MapContainer>
+        </div>
+      </section>
     </div>
-    
   );
 }

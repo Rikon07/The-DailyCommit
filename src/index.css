@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400..700;1,400..700&display=swap');
 
 @import "tailwindcss";
-@plugin "daisyui";
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
@@ -20,13 +19,6 @@
 
 button{
     cursor: pointer;
-}
-
-@font-face {
-  font-family: 'Odena Glamour';
-  src: url('./assets/Fonts/OdenaGlamour-BF6625f66aead7f.otf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
 }
 
 @font-face {
@@ -50,10 +42,6 @@ button{
   font-style: normal;
 }
 
-.odena{
-    font-family: 'Odena Glamour';
-}
-
 .sfpro{
     font-family: 'SF Pro';
 }
@@ -67,7 +55,7 @@ button{
 }
 
 .input-style {
-  @apply w-full px-4 py-2 rounded-lg bg-white/70 dark:bg-[#0F172A] placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#38BDF8];
+  @apply w-full px-4 py-2 rounded-lg bg-white/70 dark:bg-[#141e35] placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#38BDF8];
 }
 
 .input{

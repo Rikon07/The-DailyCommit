@@ -5,8 +5,8 @@ import Swal from "sweetalert2";
 import { motion } from "framer-motion";
 import useAuth from "../../Hooks/UseAuth";
 import Loader from "../../Components/Extra Components/Loader";
-import axios from 'axios';
 import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import axios from "../../Hooks/Axios";
 const Login = () => {
   const { signIn, googleSignIn } = useAuth();
   const [error, setError] = useState("");
@@ -18,7 +18,7 @@ const axiosSecure = useAxiosSecure();
 
 const saveUserToDB = async (user) => {
   try {
-    await axios.post('http://localhost:3000/users', {
+    await axios.post('/users', {
       name: user.displayName,
       email: user.email,
       photo: user.photoURL,
@@ -33,7 +33,7 @@ const saveUserToDB = async (user) => {
 
   const checkAndExpirePremium = async (email) => {
   try {
-    const userRes = await axios.get(`http://localhost:3000/users/${email}`);
+    const userRes = await axios.get(`/users/${email}`);
     const premiumTaken = userRes.data.premiumTaken;
     // console.log("Premium Taken:", premiumTaken);
     // console.log("Current Date:", new Date());

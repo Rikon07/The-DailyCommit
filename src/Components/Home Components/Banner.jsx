@@ -82,7 +82,7 @@ const Banner = () => {
         <FaGlobe className="text-[#0EA5E9] text-3xl animate-spin-slow" />
       </motion.div>
       <motion.div
-        className="absolute left-1/2 bottom-62 z-10"
+        className="absolute left-1/2 bottom-16 md:bottom-44 lg:bottom-62 z-10"
         initial={{ scale: 0.7, opacity: 0 }}
         animate={{ scale: 1, opacity: 0.4 }}
         transition={{ delay: 1, duration: 1.2, type: "spring" }}

@@ -2,15 +2,15 @@ import { Check, X } from "lucide-react";
 import { useNavigate } from "react-router";
 import { useRef, useEffect } from "react";
 import gsap from "gsap";
+import GlowingCard from "../Extra Components/GlowingCard";
 const plans = [
   {
-    title: "Free Plan",
+    title: "You're using Free Plan",
     price: "Free",
     features: [
       "Read All Approved Articles",
-      "Search by Publisher",
+      
       "Light/Dark Theme Toggle",
-      "Bookmark Articles",
     ],
     unavailable: [
       "Write Articles",
@@ -18,6 +18,8 @@ const plans = [
     ],
     color: "bg-[#D0E7F9] text-[#223A5E] dark:bg-[#1e293b] dark:text-white border border-[#38BDF8]",
     buttonColor: "bg-[#38BDF8] text-white",
+    buttonText: "Subscribe to Premium",
+    glowColor: "#38BDF8",
   },
   {
     title: "Premium Plan",
@@ -26,18 +28,21 @@ const plans = [
       "All Free Features",
       "Write Articles (Pending Approval)",
       "Priority Review for Publishing",
-      "Verified Badge on Profile",
+      "Search by Publisher",
     ],
     unavailable: [],
     color: "bg-[#D0E7F9] text-[#223A5E] dark:bg-[#1e293b] dark:text-white border border-orange-500",
     buttonColor: "bg-[#38BDF8] text-white",
     highlight: true,
+    buttonText: "Subscribe Now",
+    glowColor: "#f59e42",
   },
 ];
 
 const Plans = () => {
   const navigate = useNavigate();
 const plansRef = useRef(null);
+
 
   useEffect(() => {
     gsap.fromTo(
@@ -55,9 +60,10 @@ const plansRef = useRef(null);
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 lg:gap-8 max-w-4xl mx-auto px-4">
         {plans.map((plan, idx) => (
-          <div
+          <GlowingCard
             key={idx}
-            className={`relative rounded-2xl shadow-lg p-6 transition hover:scale-[1.01] flex flex-col gap-2 justify-between duration-300 ${plan.color} ${plan.highlight ? "ring-2 ring-[#38BDF8] ring-offset-2" : ""}`}
+            glowColor={plan.glowColor}
+            className={` relative rounded-2xl shadow-lg p-6 transition hover:scale-[1.01] flex flex-col gap-2 justify-between duration-300 ${plan.color} ${plan.highlight ? "ring-2 ring-[#38BDF8] ring-offset-2" : ""}`}
           >
             {plan.highlight && (
               <span className="absolute top-4 right-4 bg-[#38BDF8] text-white px-3 py-1 rounded-full text-xs font-bold shadow">
@@ -65,14 +71,14 @@ const plansRef = useRef(null);
               </span>
             )}
             <div>
-              <h3 className="text-2xl font-semibold mb-1">{plan.title}</h3>
-              <p className="text-lg font-medium mb-3">{plan.price}</p>
+              <h3 className="text-lg md:text-xl lg:text-2xl font-semibold mb-1">{plan.title}</h3>
+              <p className="text-sm md:text-base lg:text-lg font-medium mb-3">{plan.price}</p>
 
-              <ul className="space-y-1 mb-6 text-sm">
+              <ul className="space-y-1 mb-6 text-xs md:text-sm">
                 {plan.features.map((feature, index) => (
                   <li key={index} className="flex items-center gap-2">
                     <Check className="text-green-500" size={20} />
-                    <span>{feature}</span>
+                    <span className="">{feature}</span>
                   </li>
                 ))}
 
@@ -92,12 +98,12 @@ const plansRef = useRef(null);
                 className="group relative inline-flex overflow-hidden rounded-full focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
               >
                 <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-gradient-to-r from-pink-600 via-purple-600 to-[#0F172A]" />
-                <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-[#38BDF8] px-8 py-2 text-sm font-medium backdrop-blur-3xl transition-all duration-300 group-hover:bg-[#0F172A]">
+                <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-[#38BDF8] px-4 md:px-8 py-1 md:py-2 text-sm font-medium backdrop-blur-3xl transition-all duration-300 group-hover:bg-[#0F172A]">
                   <svg stroke="currentColor" viewBox="0 0 24 24" fill="none" className="mr-2 h-5 w-5 text-pink-500 transition-transform duration-300 group-hover:-translate-x-1">
                     <path d="M11 19l-7-7 7-7m8 14l-7-7 7-7" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
                   </svg>
-                  <span className="relative bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text font-semibold text-white/90">
-                    Subscribe Now
+                  <span className="relative bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 bg-clip-text font-semibold text-xs md:text-sm text-white/90">
+                    {plan.buttonText}
                   </span>
                   <svg stroke="currentColor" viewBox="0 0 24 24" fill="none" className="ml-2 h-5 w-5 text-blue-500 transition-transform duration-300 group-hover:translate-x-1">
                     <path d="M13 5l7 7-7 7M5 5l7 7-7 7" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
@@ -105,7 +111,7 @@ const plansRef = useRef(null);
                 </span>
               </button>
             </div>
-          </div>
+          </GlowingCard>
         ))}
       </div>
     </section>

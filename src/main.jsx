@@ -20,7 +20,3 @@ createRoot(document.getElementById('root')).render(
     </AuthProvider>
   </QueryClientProvider>
 )
-
-// createRoot(document.getElementById('root')).render(
-//   <div>Hello World</div>
-// )

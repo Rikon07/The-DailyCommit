@@ -57,17 +57,17 @@ const statsRef = useRef(null);
       </h2>
       <p className="text-[#475569] dark:text-[#94A3B8] mt-2 text-sm lg:text-base  text-center">Types of users</p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-8">
         {cards.map((card, idx) => (
           <motion.div
             key={card.label}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: idx * 0.1 }}
-            className={`rounded-2xl shadow-xl p-4 flex flex-col items-center hover:scale-101 transition-transform duration-150 border-2 ${card.bg} ${card.border}`}
+            className={`rounded-2xl shadow-xl p-4 flex justify-around  md:flex-col items-center hover:scale-101 transition-transform duration-150 border-2 ${card.bg} ${card.border}`}
           >
-            <div className="mb-4">{card.icon}</div>
-            <div className="text-4xl font-extrabold text-[#38BDF8] dark:text-yellow-400 mb-2">
+            <div className="md:mb-4">{card.icon}</div>
+            <div className="text-2xl md:text-4xl font-extrabold text-[#38BDF8] dark:text-yellow-400 md:mb-2">
               {isLoading ? (
                 <span className="animate-pulse">...</span>
               ) : (
@@ -80,6 +80,5 @@ const statsRef = useRef(null);
       </div>
     </section>
     </div>
-    
   );
 }

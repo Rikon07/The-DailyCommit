@@ -2,7 +2,7 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { Icon } from "leaflet";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import "leaflet/dist/leaflet.css";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import gsap from "gsap";
 
 const BD_ARTICLES = [
@@ -87,20 +87,27 @@ const markerIcon = new Icon({
 });
 
 export default function TechNewsMap() {
-  // Center on Bangladesh
   const center = [23.685, 90.3563];
-  const mapRef = useRef(null);
+  const mapSectionRef = useRef(null);
+
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    gsap.fromTo(
-      mapRef.current,
-      { opacity: 0, y: 40 },
-      { opacity: 1, y: 0, duration: 1, delay: 0.8, ease: "power2.out" }
-    );
+    setMounted(true);
+    if (mapSectionRef.current) {
+      gsap.fromTo(
+        mapSectionRef.current,
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0, duration: 1, delay: 0.8, ease: "power2.out" }
+      );
+    }
   }, []);
+
+  if (!mounted) return null;
+
   return (
     <div
-      ref={mapRef}
+      ref={mapSectionRef}
       className="bg-[#D0E7F9]/30 cabin dark:bg-[#0F172A] border-t border-[#38BDF8]/20"
     >
       <section className="max-w-5xl mx-auto py-12 px-4">
@@ -116,6 +123,7 @@ export default function TechNewsMap() {
             zoom={7}
             scrollWheelZoom={true}
             className="w-full h-full"
+            style={{ minHeight: "400px", minWidth: "100%" }}
           >
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'

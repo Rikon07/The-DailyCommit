@@ -77,14 +77,14 @@ const Banner = () => {
         className="absolute right-10 top-24 z-10"
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 0.2 }}
-        transition={{ delay: 0.7, duration: 1.2, type: "spring" }}
+        transition={{ delay: 0.7, duration: 1.8, type: "spring" }}
       >
-        <FaGlobe className="text-[#0EA5E9] text-3xl animate-spin-slow" />
+        <FaGlobe className="text-[#0EA5E9] text-3xl animate-spin" />
       </motion.div>
       <motion.div
-        className="absolute left-1/2 bottom-16 md:bottom-44 lg:bottom-62 z-10"
+        className="absolute left-1/2 bottom-36 md:bottom-44 lg:bottom-62 z-10"
         initial={{ scale: 0.7, opacity: 0 }}
-        animate={{ scale: 1, opacity: 0.4 }}
+        animate={{ scale: 1, opacity: 0.3 }}
         transition={{ delay: 1, duration: 1.2, type: "spring" }}
       >
         <FaCode className="text-[#38BDF8] text-3xl" />

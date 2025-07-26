@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import GlowingCard from "../Extra Components/GlowingCard";
+import Marquee from "react-fast-marquee";
 const plans = [
   {
     title: "You're using Free Plan",
@@ -39,7 +40,7 @@ const plans = [
   },
 ];
 
-const Plans = () => {
+const Plans = ( {userInfo} ) => {
   const navigate = useNavigate();
 const plansRef = useRef(null);
 
@@ -51,6 +52,38 @@ const plansRef = useRef(null);
       { opacity: 1, y: 0, duration: 1, ease: "power2.out" }
     );
   }, []);
+
+  const isUserPremium =
+    userInfo?.premiumTaken && new Date(userInfo.premiumTaken) > new Date();
+
+  if (isUserPremium) {
+    return (
+      <div className="bg-gradient-to-b from-[#38BDF8]/20 to-to-[#D0E7F9]/30 dark:from-[#0F172A] dark:to-[#223A5E]/40">
+        <section
+        id="plans"
+        className=" max-w-5xl px-2 md:px-6 mx-auto py-6 lg:py-12 sfpro flex flex-col items-center justify-center"
+      >
+        <Marquee
+          gradient={true}
+          gradientColor={[56, 189, 248]}
+          gradientWidth={60}
+          speed={40}
+          pauseOnHover={true}
+          className=""
+        >
+          <div className="text-center flex items-center gap-8">
+            <h2 className="text-xl lg:text-2xl font-bold text-[#0F172A] dark:text-[#D0E7F9]">
+              You are a Premium Member!
+            </h2>
+            <p className="text-[#38BDF8] text-lg font-semibold">
+              Enjoy unlimited posting and exclusive content.
+            </p>
+          </div>
+        </Marquee>
+      </section>
+      </div>
+    );
+  }
   return (
     <section ref={plansRef} id="plans" className="py-6 lg:py-16 bg-[#D0E7F9]/30 dark:bg-[#0F172A] cabin" data-aos="fade-up">
       <div className="text-center mb-4">

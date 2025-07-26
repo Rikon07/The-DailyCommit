@@ -160,17 +160,17 @@ const Navbar = () => {
         </NavLink>
       </li>
     )}
-    {isAdmin && (
-      <li>
-        <NavLink to="/dashboard" className={navLinkStyle}>
-          Dashboard
-        </NavLink>
-      </li>
-    )}
     {isPremium && (
       <li>
         <NavLink to="/premium-articles" className={navLinkStyle}>
           Premium Articles
+        </NavLink>
+      </li>
+    )}
+    {isAdmin && (
+      <li>
+        <NavLink to="/dashboard" className={navLinkStyle}>
+          Dashboard
         </NavLink>
       </li>
     )}

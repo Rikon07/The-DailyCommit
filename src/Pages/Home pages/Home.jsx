@@ -7,21 +7,38 @@ import Statistics from '../../Components/Home Components/Statistics';
 import TechNewsMap from '../../Components/Home Components/TechNewsMap';
 import TopContributors from '../../Components/Home Components/TopContributors';
 import HomepageModal from '../../Components/Home Components/HomeModal';
+import useAuth from '../../Hooks/UseAuth';
+import useAxiosSecure from '../../Hooks/useAxiosSecure';
+import { useQuery } from '@tanstack/react-query';
 
 
 const Home = () => {
-    return (
-        <div>
-            <HomepageModal />
-            <Banner />
-            <Plans />
-            <TrendingArticles />
-            <AllPublisher />
-            <Statistics />
-            <TechNewsMap />
-            <TopContributors />
-        </div>
-    );
+    const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
+
+  const { data: userInfo } = useQuery({
+    queryKey: ["userInfo", user?.email],
+    enabled: !!user?.email,
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/users/${user.email}`);
+      return res.data;
+    },
+  });
+
+//   console.log("User Info:", userInfo);
+
+  return (
+    <div>
+      <HomepageModal />
+      <Banner />
+      <Plans userInfo={userInfo} />
+      <TrendingArticles userInfo={userInfo} />
+      <AllPublisher />
+      <Statistics />
+      <TechNewsMap />
+      <TopContributors />
+    </div>
+  );
 };
 
 export default Home;

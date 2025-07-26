@@ -61,7 +61,7 @@ const Banner = () => {
           alt="News background"
           className="w-full h-full object-cover object-center opacity-60"
         />
-        <div className="absolute inset-0 bg-white/60 dark:bg-[#0F172A]/80 backdrop-blur-sm"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-white/60 to-[#D0E7F9]/60 dark:from-[#0F172A]/80 dark:to-[#0F172A]/80 backdrop-blur-sm"></div>
       </div>
 
       {/* Floating icons for extra animation */}

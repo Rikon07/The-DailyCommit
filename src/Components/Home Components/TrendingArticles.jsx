@@ -44,7 +44,7 @@ export default function TrendingArticles({ userInfo }) {
     <div
       ref={trendingRef}
       id="trending"
-      className="bg-[#D0E7F9]/30 dark:bg-[#0F172A] border-t border-[#38BDF8]/20 dark:border-[#1e293b]"
+      className="bg-gradient-to-b from-[#38BDF8]/10 to-[#D0E7F9]/30 dark:from-[#223A5E]/40 dark:to-[#0F172A] border-t border-[#38BDF8]/20 dark:border-[#1e293b]"
     >
       <section className="max-w-5xl cabin mx-auto py-12 md:py-16 px-3 md:px-6 relative">
         <div className="text-center mb-8">

@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import Select from "react-select";
 import Skeleton from "react-loading-skeleton";
 import { motion } from "framer-motion";
+import useAuth from "../../Hooks/UseAuth";
 
 const tags = [
   "AI", "Machine Learning", "Deep Learning", "Data Science", "Cybersecurity", "Cloud Computing",
@@ -45,12 +46,23 @@ const customSelectStyles = {
   }),
 };
 
-export default function AllArticles({ userInfo }) {
+export default function AllArticles() {
   const axiosSecure = useAxiosSecure();
   const [search, setSearch] = useState("");
   const [selectedPublisher, setSelectedPublisher] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
   const [publishers, setPublishers] = useState([]);
+
+  const { user } = useAuth();
+
+  const { data: userInfo } = useQuery({
+    queryKey: ["userInfo", user?.email],
+    enabled: !!user?.email,
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/users/${user.email}`);
+      return res.data;
+    },
+  });
 
   // Fetch publishers for filter dropdown
   useEffect(() => {
@@ -165,7 +177,7 @@ export default function AllArticles({ userInfo }) {
                 </div>
                 <Link
                   to={canView ? `/articles/${article._id}` : "#"}
-                  className={`mt-auto px-4 py-2 rounded-lg font-semibold transition text-center ${
+                  className={`mt-auto px-4 py-1 rounded-lg font-semibold transition text-center ${
                     canView
                       ? "bg-[#38BDF8] text-white hover:bg-[#0EA5E9]"
                       : "bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none"

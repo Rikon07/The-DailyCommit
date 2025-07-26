@@ -4,6 +4,7 @@ import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import GlowingCard from "../Extra Components/GlowingCard";
 import Marquee from "react-fast-marquee";
+import { FaCrown } from "react-icons/fa";
 const plans = [
   {
     title: "You're using Free Plan",
@@ -72,10 +73,11 @@ const plansRef = useRef(null);
           className=""
         >
           <div className="text-center flex items-center gap-8">
-            <h2 className="text-xl lg:text-2xl font-bold text-[#0F172A] dark:text-[#D0E7F9]">
+            <h2 className="text-xl lg:text-2xl font-semibold text-[#0F172A] dark:text-[#D0E7F9]">
               You are a Premium Member!
             </h2>
-            <p className="text-[#38BDF8] text-lg font-semibold">
+            <span><FaCrown></FaCrown></span>
+            <p className="text-[#38BDF8] text-lg">
               Enjoy unlimited posting and exclusive content.
             </p>
           </div>

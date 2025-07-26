@@ -77,8 +77,9 @@ const saveUserToDB = async (user) => {
     await saveUserToDB(result.user);
     await checkAndExpirePremium(result.user.email);
     showAlert("Welcome Back!", `Logged in as ${result.user.displayName}`, "success");
-    setLoading(false);
     navigate(location.state?.from || "/", { replace: true });
+    setLoading(false);
+    
   } catch (err) {
     setError("Wrong credentials. Please try again.");
     setLoading(false);

@@ -60,15 +60,15 @@ const AuthProvider = ({ children }) => {
 
   const googleProvider = new GoogleAuthProvider();
 
-  if (loading) {
-    return <Loader />;
-  }
+
 
 const googleSignIn = () => {
   setLoading(true);
   return signInWithPopup(auth, googleProvider);
 };
-
+  // if (loading) {
+  //   return <Loader />;
+  // }
   const authData = {
     user,
     setUser,

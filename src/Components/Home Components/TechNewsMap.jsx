@@ -108,7 +108,7 @@ export default function TechNewsMap() {
   return (
     <div
       ref={mapSectionRef}
-      className="bg-[#D0E7F9]/30 cabin dark:bg-[#0F172A] border-t border-[#38BDF8]/20"
+      className="bg-[#D0E7F9]/30 cabin dark:bg-[#0F172A] border-t border-[#38BDF8]/20 z-10 relative"
     >
       <section className="max-w-5xl mx-auto py-12 px-4">
         <div className="flex items-center gap-2 mb-4 justify-center">

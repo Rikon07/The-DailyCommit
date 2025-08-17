@@ -9,7 +9,7 @@ import useAdmin from "../../Hooks/useAdmin";
 import axios from "../../Hooks/Axios";
 import { Tooltip } from "react-tooltip";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { FaChartPie } from "react-icons/fa6";
+import { FaChartPie, FaEnvelope } from "react-icons/fa6";
 import { FaUserShield } from "react-icons/fa6";
 const Navbar = () => {
   const { user, logOut } = useAuth();
@@ -159,9 +159,7 @@ const Navbar = () => {
                   All Articles
                 </NavLink>
               </li>
-              {user && (
-                <>
-                  <li>
+              <li>
                     <NavLink
                       to="/add-article"
                       className="block px-5 py-2 hover:bg-[#38BDF8]/10 dark:hover:bg-[#38BDF8]/20 rounded-lg transition hover:text-[#38BDF8]"
@@ -169,6 +167,8 @@ const Navbar = () => {
                       Add Article
                     </NavLink>
                   </li>
+              {user && (
+                <>
                   <li>
                     <NavLink
                       to="/my-articles"
@@ -256,6 +256,12 @@ const Navbar = () => {
 
       {/* Right section */}
       <div className="hidden lg:flex items-center gap-5">
+        <Link to="/contact">
+        <button
+              className="hidden w-9 h-9 md:flex items-center justify-center rounded-full bg-[#D0E7F9] dark:bg-[#0F172A] text-[#0F172A] dark:text-[#D0E7F9] border border-[#38BDF8] hover:bg-[#38BDF8] hover:text-[#D0E7F9] dark:hover:text-[#0F172A] transition"
+            >
+              <FaEnvelope size={20} />
+            </button></Link>
         <ThemeToggle />
         {!user ? (
           <>
@@ -384,13 +390,14 @@ const Navbar = () => {
                         All Articles
                       </NavLink>
                     </li>
-                    {user && (
-                      <>
-                        <li>
+                    <li>
                           <NavLink to="/add-article" className={navLinkStyle}>
                             Add Article
                           </NavLink>
                         </li>
+                    {user && (
+                      <>
+                        
                         <li>
                           <NavLink to="/my-articles" className={navLinkStyle}>
                             My Articles

@@ -8,12 +8,33 @@ import { motion } from "framer-motion";
 import useAuth from "../../Hooks/UseAuth";
 
 const tags = [
-  "AI", "Machine Learning", "Deep Learning", "Data Science", "Cybersecurity", "Cloud Computing",
-  "Web Development", "Mobile Development", "Programming Languages", "Algorithms", "Networking",
-  "Blockchain", "DevOps", "Open Source", "Quantum Computing", "Software Engineering", "Database",
-  "Big Data", "UI/UX", "Startups", "Tech Industry", "Research", "Hardware", "Ethics", "Education"
+  "AI",
+  "Machine Learning",
+  "Deep Learning",
+  "Data Science",
+  "Cybersecurity",
+  "Cloud Computing",
+  "Web Development",
+  "Mobile Development",
+  "Programming Languages",
+  "Algorithms",
+  "Networking",
+  "Blockchain",
+  "DevOps",
+  "Open Source",
+  "Quantum Computing",
+  "Software Engineering",
+  "Database",
+  "Big Data",
+  "UI/UX",
+  "Startups",
+  "Tech Industry",
+  "Research",
+  "Hardware",
+  "Ethics",
+  "Education",
 ];
-const tagsOptions = tags.map(tag => ({ value: tag, label: tag }));
+const tagsOptions = tags.map((tag) => ({ value: tag, label: tag }));
 
 const customSelectStyles = {
   control: (base, state) => ({
@@ -66,7 +87,9 @@ export default function AllArticles() {
 
   // Fetch publishers for filter dropdown
   useEffect(() => {
-    axiosSecure.get("/publishers").then(res => setPublishers(res.data.map(p => p.name)));
+    axiosSecure
+      .get("/publishers")
+      .then((res) => setPublishers(res.data.map((p) => p.name)));
   }, [axiosSecure]);
 
   // Fetch articles with filters
@@ -76,7 +99,8 @@ export default function AllArticles() {
       const params = new URLSearchParams();
       if (search) params.append("search", search);
       if (selectedPublisher) params.append("publisher", selectedPublisher);
-      if (selectedTags.length) params.append("tags", selectedTags.map(t => t.value).join(","));
+      if (selectedTags.length)
+        params.append("tags", selectedTags.map((t) => t.value).join(","));
       const res = await axiosSecure.get(`/articles?${params.toString()}`);
       return res.data;
     },
@@ -85,7 +109,7 @@ export default function AllArticles() {
   // Animation variants
   const cardVariants = {
     hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0 }
+    visible: { opacity: 1, y: 0 },
   };
 
   return (
@@ -97,17 +121,19 @@ export default function AllArticles() {
           type="text"
           placeholder="Search by title..."
           value={search}
-          onChange={e => setSearch(e.target.value)}
+          onChange={(e) => setSearch(e.target.value)}
           className="px-4 py-2 rounded border border-[#38BDF8] focus:outline-none focus:ring-2 focus:ring-[#38BDF8] bg-white dark:bg-[#223A5E] text-[#0F172A] dark:text-[#D0E7F9]"
         />
         <select
           value={selectedPublisher}
-          onChange={e => setSelectedPublisher(e.target.value)}
+          onChange={(e) => setSelectedPublisher(e.target.value)}
           className="px-4 py-2 rounded border border-[#38BDF8] focus:outline-none focus:ring-2 focus:ring-[#38BDF8] bg-white dark:bg-[#223A5E] text-[#0F172A] dark:text-[#D0E7F9]"
         >
           <option value="">All Publishers</option>
-          {publishers.map(pub => (
-            <option key={pub} value={pub}>{pub}</option>
+          {publishers.map((pub) => (
+            <option key={pub} value={pub}>
+              {pub}
+            </option>
           ))}
         </select>
         <div className="min-w-[180px]">
@@ -120,7 +146,7 @@ export default function AllArticles() {
             styles={customSelectStyles}
             className="react-select-container"
             classNamePrefix="react-select"
-            theme={theme => ({
+            theme={(theme) => ({
               ...theme,
               borderRadius: 8,
               colors: {
@@ -136,7 +162,10 @@ export default function AllArticles() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {isLoading ? (
           Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="rounded-xl shadow-lg p-4 border border-gray-200 bg-white dark:bg-[#223A5E]">
+            <div
+              key={i}
+              className="rounded-xl shadow-lg p-4 border border-gray-200 bg-white dark:bg-[#223A5E]"
+            >
               <Skeleton height={160} className="mb-2 rounded-lg" />
               <Skeleton height={24} width="60%" className="mb-1" />
               <Skeleton height={16} width="40%" className="mb-1" />
@@ -145,10 +174,14 @@ export default function AllArticles() {
             </div>
           ))
         ) : articles.length === 0 ? (
-          <div className="col-span-3 text-center text-gray-500">No articles found.</div>
+          <div className="col-span-3 text-center text-gray-500">
+            No articles found.
+          </div>
         ) : (
-          articles.map(article => {
-            const isUserPremium = userInfo?.premiumTaken && new Date(userInfo.premiumTaken) > new Date();
+          articles.map((article) => {
+            const isUserPremium =
+              userInfo?.premiumTaken &&
+              new Date(userInfo.premiumTaken) > new Date();
             const isPremiumArticle = article.isPremium;
             const canView = !isPremiumArticle || isUserPremium;
             return (
@@ -164,29 +197,55 @@ export default function AllArticles() {
                     : "border border-gray-200 bg-white dark:bg-[#223A5E]"
                 }`}
               >
-                <img src={article.image} alt={article.title} className="w-full h-40 object-cover rounded-lg mb-2" />
+                <img
+                  src={article.image}
+                  alt={article.title}
+                  className="w-full h-40 object-cover rounded-lg mb-2"
+                />
                 <div className="flex-1">
                   <h3 className="text-lg font-bold mb-1">{article.title}</h3>
-                  <div className="text-sm text-[#38BDF8] mb-1">{article.publisher}</div>
-                  <p className="text-gray-700 dark:text-gray-200 text-sm mb-2 line-clamp-3">{article.description}</p>
+                  <div className="text-sm text-[#38BDF8] mb-1">
+                    {article.publisher}
+                  </div>
+                  <p className="text-gray-700 dark:text-gray-200 text-sm mb-2 line-clamp-3">
+                    {article.description}
+                  </p>
                   {isPremiumArticle && (
                     <span className="inline-block bg-[#38BDF8] text-white text-xs px-2 py-1 rounded-full mb-2">
                       Premium
                     </span>
                   )}
                 </div>
-                <Link
-                  to={canView ? `/articles/${article._id}` : "#"}
-                  className={`mt-auto px-4 py-1 rounded-lg font-semibold transition text-center ${
-                    canView
-                      ? "bg-[#38BDF8] text-white hover:bg-[#0EA5E9]"
-                      : "bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none"
-                  }`}
-                  tabIndex={canView ? 0 : -1}
-                  aria-disabled={!canView}
-                >
-                  Details
-                </Link>
+                <div className="relative group w-full">
+                  <Link
+                    to={canView ? `/articles/${article._id}` : "#"}
+                    className={`mt-auto px-4 py-1 rounded-lg font-semibold transition text-center block ${
+                      canView
+                        ? "bg-[#38BDF8] text-white hover:bg-[#0EA5E9]"
+                        : "bg-gray-300 text-gray-500 cursor-not-allowed pointer-events-none"
+                    }`}
+                    tabIndex={canView ? 0 : -1}
+                    aria-disabled={!canView}
+                  >
+                    Details
+                  </Link>
+
+                  {!canView && (
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 hidden group-hover:block z-20">
+                      <div className="bg-white/50 dark:bg-[#223A5E]/50 text-gray-700 border border-gray-200 shadow-lg rounded-lg p-3 w-52 text-center">
+                        <p className="text-xs dark:text-white mb-2">
+                          Be premium to view this article
+                        </p>
+                        <Link
+                          to="/subscription"
+                          className="px-3 py-1 text-sm rounded-md bg-[#38BDF8] text-white hover:bg-[#0EA5E9] transition"
+                        >
+                          Get Premium
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </motion.div>
             );
           })

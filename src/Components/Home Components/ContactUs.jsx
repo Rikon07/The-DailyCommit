@@ -105,7 +105,7 @@ export default function ContactUs() {
 
   return (
     <div className="bg-[#D0E7F9]/30 cabin dark:bg-[#0F172A] border-t border-[#38BDF8]/20 z-10 relative">
-        <section className="max-w-5xl mx-auto py-16 px-2">
+        <section className="max-w-6xl mx-auto py-16 lg:py-22 px-2">
       <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 text-[#0F172A] dark:text-[#D0E7F9]">
         Contact Us
       </h2>

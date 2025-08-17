@@ -10,6 +10,7 @@ import HomepageModal from '../../Components/Home Components/HomeModal';
 import useAuth from '../../Hooks/UseAuth';
 import useAxiosSecure from '../../Hooks/useAxiosSecure';
 import { useQuery } from '@tanstack/react-query';
+import { FeaturesSection } from '../../Components/Home Components/Features';
 
 
 const Home = () => {
@@ -33,6 +34,7 @@ const Home = () => {
       <Banner />
       <Plans userInfo={userInfo} />
       <TrendingArticles userInfo={userInfo} />
+      <FeaturesSection />
       <AllPublisher />
       <Statistics />
       <TechNewsMap />

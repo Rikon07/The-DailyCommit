@@ -11,6 +11,7 @@ import useAuth from '../../Hooks/UseAuth';
 import useAxiosSecure from '../../Hooks/useAxiosSecure';
 import { useQuery } from '@tanstack/react-query';
 import { FeaturesSection } from '../../Components/Home Components/Features';
+import ContactUs from '../../Components/Home Components/ContactUs';
 
 
 const Home = () => {
@@ -37,8 +38,9 @@ const Home = () => {
       <FeaturesSection />
       <AllPublisher />
       <Statistics />
-      <TechNewsMap />
+      {/* <TechNewsMap /> */}
       <TopContributors />
+      <ContactUs />
     </div>
   );
 };

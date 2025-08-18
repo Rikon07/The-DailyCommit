@@ -23,6 +23,7 @@ Built with React, Tailwind CSS, Express, MongoDB, Firebase Auth, Stripe, and mor
 ## 👤 Admin Login
 
 - **Username:** `rik.shelby@gmail.com`
+- **Password:** `@Shelby12345`
 
 
 ---

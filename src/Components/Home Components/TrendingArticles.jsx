@@ -25,17 +25,28 @@ export default function TrendingArticles({ userInfo }) {
     );
   }, []);
 
-  const { data: articles = [], isLoading } = useQuery({
-    queryKey: ["trending-articles"],
-    queryFn: async () => {
-      const res = await axiosSecure.get("/articles");
-      return res.data;
-    },
-  });
+  // const { data: articles = [], isLoading } = useQuery({
+  //   queryKey: ["trending-articles"],
+  //   queryFn: async () => {
+  //     const res = await axiosSecure.get("/articles");
+  //     return res.data;
+  //   },
+  // });
 
-  const trending = [...articles]
-    .sort((a, b) => (b.views || 0) - (a.views || 0))
-    .slice(0, 6);
+  // const trending = [...articles]
+  //   .sort((a, b) => (b.views || 0) - (a.views || 0))
+  //   .slice(0, 6);
+  const { data, isLoading } = useQuery({
+  queryKey: ["trending-articles"],
+  queryFn: async () => {
+    const res = await axiosSecure.get("/articles");
+    return res.data;
+  },
+});
+const articles = data?.articles || [];
+const trending = [...articles]
+  .sort((a, b) => (b.views || 0) - (a.views || 0))
+  .slice(0, 6);
 
   const isUserPremium =
     userInfo?.premiumTaken && new Date(userInfo.premiumTaken) > new Date();

@@ -6,33 +6,14 @@ import Select from "react-select";
 import Skeleton from "react-loading-skeleton";
 import { motion } from "framer-motion";
 import useAuth from "../../Hooks/UseAuth";
+import { FaStar, FaEye } from "react-icons/fa6";
+import Pagination from "../../Components/Extra Components/Pagination";
 
 const tags = [
-  "AI",
-  "Machine Learning",
-  "Deep Learning",
-  "Data Science",
-  "Cybersecurity",
-  "Cloud Computing",
-  "Web Development",
-  "Mobile Development",
-  "Programming Languages",
-  "Algorithms",
-  "Networking",
-  "Blockchain",
-  "DevOps",
-  "Open Source",
-  "Quantum Computing",
-  "Software Engineering",
-  "Database",
-  "Big Data",
-  "UI/UX",
-  "Startups",
-  "Tech Industry",
-  "Research",
-  "Hardware",
-  "Ethics",
-  "Education",
+  "AI", "Machine Learning", "Deep Learning", "Data Science", "Cybersecurity", "Cloud Computing",
+  "Web Development", "Mobile Development", "Programming Languages", "Algorithms", "Networking",
+  "Blockchain", "DevOps", "Open Source", "Quantum Computing", "Software Engineering", "Database",
+  "Big Data", "UI/UX", "Startups", "Tech Industry", "Research", "Hardware", "Ethics", "Education",
 ];
 const tagsOptions = tags.map((tag) => ({ value: tag, label: tag }));
 
@@ -73,6 +54,8 @@ export default function AllArticles() {
   const [selectedPublisher, setSelectedPublisher] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
   const [publishers, setPublishers] = useState([]);
+  const [page, setPage] = useState(1);
+  const limit = 9;
 
   const { user } = useAuth();
 
@@ -92,21 +75,26 @@ export default function AllArticles() {
       .then((res) => setPublishers(res.data.map((p) => p.name)));
   }, [axiosSecure]);
 
-  // Fetch articles with filters
-  const { data: articles = [], isLoading } = useQuery({
-    queryKey: ["public-articles", search, selectedPublisher, selectedTags],
+  // Fetch articles with filters and pagination
+  const { data, isLoading } = useQuery({
+    queryKey: ["public-articles", search, selectedPublisher, selectedTags, page],
     queryFn: async () => {
       const params = new URLSearchParams();
       if (search) params.append("search", search);
       if (selectedPublisher) params.append("publisher", selectedPublisher);
       if (selectedTags.length)
         params.append("tags", selectedTags.map((t) => t.value).join(","));
+      params.append("page", page);
+      params.append("limit", limit);
       const res = await axiosSecure.get(`/articles?${params.toString()}`);
       return res.data;
     },
+    keepPreviousData: true,
   });
 
-  // Animation variants
+  const articles = data?.articles || [];
+  const total = data?.total || 0;
+
   const cardVariants = {
     hidden: { opacity: 0, y: 30 },
     visible: { opacity: 1, y: 0 },
@@ -161,7 +149,7 @@ export default function AllArticles() {
       {/* Articles Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {isLoading ? (
-          Array.from({ length: 6 }).map((_, i) => (
+          Array.from({ length: limit }).map((_, i) => (
             <div
               key={i}
               className="rounded-xl shadow-lg p-4 border border-gray-200 bg-white dark:bg-[#223A5E]"
@@ -204,12 +192,20 @@ export default function AllArticles() {
                 />
                 <div className="flex-1">
                   <h3 className="text-lg font-bold mb-1">{article.title}</h3>
-                  <div className="text-sm text-[#38BDF8] mb-1">
-                    {article.publisher}
+                  <div className="text-sm text-[#38BDF8] mb-1 flex items-center gap-2">
+                    <FaEye className="text-[#38BDF8]" /> {article.views || 0}
                   </div>
-                  <p className="text-gray-700 dark:text-gray-200 text-sm mb-2 line-clamp-3">
-                    {article.description}
-                  </p>
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    {article.tags?.map((tag) => (
+                      <span
+                        key={tag}
+                        className="bg-[#38BDF8]/20 text-[#24789c] dark:text-[#38BDF8] text-xs px-2 py-1 rounded-full"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="text-xs text-[#38BDF8] mb-2">{article.publisher}</div>
                   {isPremiumArticle && (
                     <span className="inline-block bg-[#38BDF8] text-white text-xs px-2 py-1 rounded-full mb-2">
                       Premium
@@ -229,7 +225,6 @@ export default function AllArticles() {
                   >
                     Details
                   </Link>
-
                   {!canView && (
                     <div className="absolute top-full left-1/2 -translate-x-1/2 hidden group-hover:block z-20">
                       <div className="bg-white/50 dark:bg-[#223A5E]/50 text-gray-700 border border-gray-200 shadow-lg rounded-lg p-3 w-52 text-center">
@@ -251,6 +246,7 @@ export default function AllArticles() {
           })
         )}
       </div>
+      <Pagination page={page} total={total} limit={limit} setPage={setPage} />
     </div>
   );
 }

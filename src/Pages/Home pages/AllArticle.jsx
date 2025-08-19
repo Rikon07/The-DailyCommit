@@ -56,6 +56,7 @@ export default function AllArticles() {
   const [publishers, setPublishers] = useState([]);
   const [page, setPage] = useState(1);
   const limit = 9;
+  const [sort, setSort] = useState("default");
 
   const { user } = useAuth();
 
@@ -76,24 +77,48 @@ export default function AllArticles() {
   }, [axiosSecure]);
 
   // Fetch articles with filters and pagination
+  // const { data, isLoading } = useQuery({
+  //   queryKey: ["public-articles", search, selectedPublisher, selectedTags, page],
+  //   queryFn: async () => {
+  //     const params = new URLSearchParams();
+  //     if (search) params.append("search", search);
+  //     if (selectedPublisher) params.append("publisher", selectedPublisher);
+  //     if (selectedTags.length)
+  //       params.append("tags", selectedTags.map((t) => t.value).join(","));
+  //     params.append("page", page);
+  //     params.append("limit", limit);
+  //     const res = await axiosSecure.get(`/articles?${params.toString()}`);
+  //     return res.data;
+  //   },
+  //   keepPreviousData: true,
+  // });
   const { data, isLoading } = useQuery({
-    queryKey: ["public-articles", search, selectedPublisher, selectedTags, page],
-    queryFn: async () => {
-      const params = new URLSearchParams();
-      if (search) params.append("search", search);
-      if (selectedPublisher) params.append("publisher", selectedPublisher);
-      if (selectedTags.length)
-        params.append("tags", selectedTags.map((t) => t.value).join(","));
-      params.append("page", page);
-      params.append("limit", limit);
-      const res = await axiosSecure.get(`/articles?${params.toString()}`);
-      return res.data;
-    },
-    keepPreviousData: true,
-  });
+  queryKey: ["public-articles", search, selectedPublisher, selectedTags, page, sort],
+  queryFn: async () => {
+    const params = new URLSearchParams();
+    if (search) params.append("search", search);
+    if (selectedPublisher) params.append("publisher", selectedPublisher);
+    if (selectedTags.length)
+      params.append("tags", selectedTags.map((t) => t.value).join(","));
+    params.append("page", page);
+    params.append("limit", limit);
+    if (sort !== "default") params.append("sort", sort);
+    const res = await axiosSecure.get(`/articles?${params.toString()}`);
+    return res.data;
+  },
+  keepPreviousData: true,
+});
 
   const articles = data?.articles || [];
   const total = data?.total || 0;
+
+  // Sorting
+  let sortedArticles = [...articles];
+  if (sort === "views-desc") {
+    sortedArticles.sort((a, b) => (b.views || 0) - (a.views || 0));
+  } else if (sort === "views-asc") {
+    sortedArticles.sort((a, b) => (a.views || 0) - (b.views || 0));
+  }
 
   const cardVariants = {
     hidden: { opacity: 0, y: 30 },
@@ -145,6 +170,15 @@ export default function AllArticles() {
             })}
           />
         </div>
+        <select
+          value={sort}
+          onChange={e => setSort(e.target.value)}
+          className="px-4 py-2 rounded border border-[#38BDF8] focus:outline-none focus:ring-2 focus:ring-[#38BDF8] bg-white dark:bg-[#223A5E] text-[#0F172A] dark:text-[#D0E7F9]"
+        >
+          <option value="default">Sort by</option>
+          <option value="views-desc">Most Viewed</option>
+          <option value="views-asc">Least Viewed</option>
+        </select>
       </div>
       {/* Articles Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

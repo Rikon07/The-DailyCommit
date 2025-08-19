@@ -76,9 +76,11 @@ const saveUserToDB = async (user) => {
     localStorage.setItem("access-token", token);
     await saveUserToDB(result.user);
     await checkAndExpirePremium(result.user.email);
+    
+    
+    navigate(location.state?.from || "/", { replace: true });
     showAlert("Welcome Back!", `Logged in as ${result.user.displayName}`, "success");
     setLoading(false);
-    navigate(location.state?.from || "/", { replace: true });
     
   } catch (err) {
     setError("Wrong credentials. Please try again.");
@@ -109,7 +111,7 @@ const saveUserToDB = async (user) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
-        {loading && <Loader />}
+        {/* {loading && <Loader />} */}
       <motion.form
         onSubmit={handleLogin}
         className="bg-white dark:bg-[#1E293B] shadow-xl rounded-2xl w-full max-w-md p-8 space-y-5"

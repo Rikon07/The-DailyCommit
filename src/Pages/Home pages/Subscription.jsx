@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import useAuth from "../../Hooks/UseAuth";
 import Swal from "sweetalert2";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Tooltip } from "react-tooltip";
 
 const periods = [
   { label: "1 Minute", value: 1, price: 1 },
@@ -34,7 +35,10 @@ const Subscription = () => {
 
   const isUserPremium =
     userInfo?.premiumTaken && new Date(userInfo.premiumTaken) > new Date();
-
+let premiumUntil = null;
+if (isUserPremium) {
+  premiumUntil = new Date(userInfo.premiumTaken);
+}
   const handleSubmit = async (e) => {
     e.preventDefault();
     setProcessing(true);
@@ -92,20 +96,20 @@ const Subscription = () => {
     );
   }
 
-  if (isUserPremium) {
-    return (
-      <div className="min-h-[68vh] flex items-center justify-center bg-gradient-to-br from-[#D0E7F9] via-[#38BDF8]/30 to-white dark:from-[#0F172A] dark:via-[#223A5E]/60 dark:to-[#0F172A] cabin">
-        <div className="w-full max-w-lg text-center bg-white/90 dark:bg-[#223A5E]/90 rounded-2xl shadow-xl p-10 flex flex-col items-center">
-          <h1 className="text-2xl font-bold text-[#0F172A] dark:text-[#38BDF8] mb-2">
-            🎉 You are already a Premium Member!
-          </h1>
-          <p className="text-[#223A5E] dark:text-[#D0E7F9] text-base">
-            Enjoy unlimited article posting, exclusive premium content, and priority support.
-          </p>
-        </div>
-      </div>
-    );
-  }
+  // if (isUserPremium) {
+  //   return (
+  //     <div className="min-h-[68vh] flex items-center justify-center bg-gradient-to-br from-[#D0E7F9] via-[#38BDF8]/30 to-white dark:from-[#0F172A] dark:via-[#223A5E]/60 dark:to-[#0F172A] cabin">
+  //       <div className="w-full max-w-lg text-center bg-white/90 dark:bg-[#223A5E]/90 rounded-2xl shadow-xl p-10 flex flex-col items-center">
+  //         <h1 className="text-2xl font-bold text-[#0F172A] dark:text-[#38BDF8] mb-2">
+  //           🎉 You are already a Premium Member!
+  //         </h1>
+  //         <p className="text-[#223A5E] dark:text-[#D0E7F9] text-base">
+  //           Enjoy unlimited article posting, exclusive premium content, and priority support.
+  //         </p>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="min-h-[68vh] flex items-center justify-center bg-gradient-to-br from-[#D0E7F9] via-[#38BDF8]/30 to-white dark:from-[#0F172A] dark:via-[#223A5E]/60 dark:to-[#0F172A] cabin">
@@ -158,13 +162,29 @@ const Subscription = () => {
             ))}
           </select>
           <button
-            type="submit"
-            disabled={!stripe || processing}
-            className="w-full border-2 border-[#38BDF8] text-[#0F172A] dark:text-[#D0E7F9] font-bold py-2 rounded-lg bg-[#38BDF8]/90 hover:bg-[#0EA5E9] dark:bg-[#223A5E]/80 transition"
-            aria-label="Pay and subscribe"
-          >
-            {processing ? "Processing..." : "PAY"}
-          </button>
+    type="submit"
+    disabled={!stripe || processing || isUserPremium}
+    className={`w-full border-2 border-[#38BDF8] text-[#0F172A] dark:text-[#D0E7F9] font-bold py-2 rounded-lg bg-[#38BDF8]/90 hover:bg-[#0EA5E9] dark:bg-[#223A5E]/80 transition
+      ${isUserPremium ? "cursor-not-allowed opacity-70" : ""}
+    `}
+    aria-label="Pay and subscribe"
+    data-tooltip-id={isUserPremium ? "premium-tooltip" : undefined}
+    data-tooltip-content={
+      isUserPremium
+        ? `You've already taken a subscription until ${premiumUntil?.toLocaleString()}`
+        : undefined
+    }
+  >
+    {processing ? "Processing..." : "PAY"}
+  </button>
+  {isUserPremium && (
+    <Tooltip
+      id="premium-tooltip"
+      place="bottom"
+      effect="solid"
+      className="!bg-[#38BDF8]/20 !text-[#0F172A] !rounded-lg !px-4 !py-2 !font-semibold"
+    />
+  )}
         </form>
       </div>
     </div>

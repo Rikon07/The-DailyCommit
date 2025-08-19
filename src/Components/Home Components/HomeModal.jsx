@@ -2,17 +2,37 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaCrown } from "react-icons/fa6";
+import useAuth from "../../Hooks/UseAuth";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
 
 export default function HomepageModal() {
   const [show, setShow] = useState(false);
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
+
+  // Fetch userInfo for premium check
+  const { data: userInfo, isLoading } = useQuery({
+    queryKey: ["userInfo", user?.email],
+    enabled: !!user?.email,
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/users/${user.email}`);
+      return res.data;
+    },
+  });
+
+  const isUserPremium =
+    userInfo?.premiumTaken && new Date(userInfo.premiumTaken) > new Date();
 
   useEffect(() => {
-    const timer = setTimeout(() => setShow(true), 10000); // 10 seconds
-    return () => clearTimeout(timer);
-  }, []);
+    if (!isUserPremium) {
+      const timer = setTimeout(() => setShow(true), 10000); // 10 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [isUserPremium]);
 
-  if (!show) return null;
+  if (isLoading || isUserPremium || !show) return null;
 
   return (
     <AnimatePresence>

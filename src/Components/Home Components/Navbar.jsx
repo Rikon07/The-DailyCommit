@@ -51,9 +51,9 @@ const Navbar = () => {
           title: "Logged Out",
           text: "You have been logged out successfully!",
           icon: "success",
-          background: theme === "dark" ? "#223A5E" : "#D0E7F9",
+          background: theme === "dark" ? "#0F172A" : "#D0E7F9",
           color: theme === "dark" ? "#90D1CA" : "#096B68",
-          confirmButtonColor: "#4FD1C5",
+          confirmButtonColor: "#38BDF8",
           confirmButtonText: "OK",
         });
       })
@@ -64,7 +64,7 @@ const Navbar = () => {
           icon: "error",
           background: theme === "dark" ? "#223A5E" : "#D0E7F9",
           color: theme === "dark" ? "#90D1CA" : "#096B68",
-          confirmButtonColor: "#4FD1C5",
+          confirmButtonColor: "#38BDF8",
           confirmButtonText: "Try Again",
         });
       });

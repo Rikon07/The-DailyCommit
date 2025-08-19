@@ -66,9 +66,9 @@ const googleSignIn = () => {
   setLoading(true);
   return signInWithPopup(auth, googleProvider);
 };
-  // if (loading) {
-  //   return <Loader />;
-  // }
+  if (loading) {
+    return <Loader />;
+  }
   const authData = {
     user,
     setUser,

@@ -4,7 +4,7 @@ import useAxiosSecure from "../../Hooks/useAxiosSecure";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../Hooks/UseAuth";
 import Swal from "sweetalert2";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const periods = [
   { label: "1 Minute", value: 1, price: 1 },
@@ -21,6 +21,19 @@ const Subscription = () => {
   const stripe = useStripe();
   const elements = useElements();
   const queryClient = useQueryClient();
+
+  // Fetch userInfo for premium check
+  const { data: userInfo, isLoading } = useQuery({
+    queryKey: ["userInfo", user?.email],
+    enabled: !!user?.email,
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/users/${user.email}`);
+      return res.data;
+    },
+  });
+
+  const isUserPremium =
+    userInfo?.premiumTaken && new Date(userInfo.premiumTaken) > new Date();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -49,7 +62,6 @@ const Subscription = () => {
     }
 
     if (paymentIntent.status === "succeeded") {
-      // 3. Update user to premium
       const now = new Date();
       const expiry = new Date(now.getTime() + selected.value * 60 * 1000);
       await axiosSecure.patch(`/users/premium/${user.email}`, { 
@@ -57,7 +69,6 @@ const Subscription = () => {
         type: "premium"
       });
 
-      // Refetch userInfo in Navbar instantly!
       await queryClient.invalidateQueries(["userInfo", user.email]);
 
       await Swal.fire({
@@ -72,6 +83,29 @@ const Subscription = () => {
     }
     setProcessing(false);
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-[68vh] flex items-center justify-center">
+        <span className="text-[#38BDF8] font-bold text-xl animate-pulse">Loading...</span>
+      </div>
+    );
+  }
+
+  if (isUserPremium) {
+    return (
+      <div className="min-h-[68vh] flex items-center justify-center bg-gradient-to-br from-[#D0E7F9] via-[#38BDF8]/30 to-white dark:from-[#0F172A] dark:via-[#223A5E]/60 dark:to-[#0F172A] cabin">
+        <div className="w-full max-w-lg text-center bg-white/90 dark:bg-[#223A5E]/90 rounded-2xl shadow-xl p-10 flex flex-col items-center">
+          <h1 className="text-2xl font-bold text-[#0F172A] dark:text-[#38BDF8] mb-2">
+            🎉 You are already a Premium Member!
+          </h1>
+          <p className="text-[#223A5E] dark:text-[#D0E7F9] text-base">
+            Enjoy unlimited article posting, exclusive premium content, and priority support.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-[68vh] flex items-center justify-center bg-gradient-to-br from-[#D0E7F9] via-[#38BDF8]/30 to-white dark:from-[#0F172A] dark:via-[#223A5E]/60 dark:to-[#0F172A] cabin">

@@ -12,6 +12,7 @@ import useAxiosSecure from '../../Hooks/useAxiosSecure';
 import { useQuery } from '@tanstack/react-query';
 import  Features  from '../../Components/Home Components/Features';
 import  ResourceLibrary  from '../../Components/Home Components/ResourceLibrary';
+import FaqSection from '../../Components/Home Components/Faq';
 
 
 const Home = () => {
@@ -38,6 +39,7 @@ const Home = () => {
       <Features />
       <AllPublisher />
       <Statistics />
+      <FaqSection />
       <TopContributors />
       <ResourceLibrary />
 

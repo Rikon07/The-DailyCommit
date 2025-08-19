@@ -19,6 +19,7 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [theme, setTheme] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   // const [userInfo, setUserInfo] = useState(null);
   // Fetch user info from backend for premium check
   // useEffect(() => {
@@ -183,13 +184,18 @@ const Navbar = () => {
           )}
         </AnimatePresence>
       </li>
-      {user && (
+      {/* {user && (
         <li>
           <NavLink to="/subscription" className={navLinkStyle}>
             Subscription
           </NavLink>
         </li>
-      )}
+      )} */}
+      <li>
+          <NavLink to="/subscription" className={navLinkStyle}>
+            Subscription
+          </NavLink>
+        </li>
       {isPremium && (
         <li>
           <NavLink to="/premium-articles" className={navLinkStyle}>
@@ -225,12 +231,14 @@ const Navbar = () => {
     </>
   );
 
+
+
   return (
     <motion.nav
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
-      className={`cabin fixed z-50 top-0 left-1/2 -translate-x-1/2 w-full px-6 md:px-10 lg:px-14 xl:px-50 py-4 rounded-lg shadow-xl flex items-center justify-between transition-all duration-300 ${
+      className={`cabin fixed z-50 top-0 left-1/2 -translate-x-1/2 w-full px-6 md:px-10 lg:px-14 xl:px-60 py-4 rounded-lg shadow-xl flex items-center justify-between transition-all duration-300 ${
         scrolled
           ? "bg-[#D0E7F9]/20 dark:bg-[#0F172A]/20 backdrop-blur-xl"
           : "bg-[#D0E7F9]/30 dark:bg-[#0F172A]/30"
@@ -277,79 +285,110 @@ const Navbar = () => {
             </Link>
           </>
         ) : (
-          <Link to="/profile" className="flex items-center gap-2">
-            {user.photoURL ? (
-              <>
-                <img
-                  src={user.photoURL}
-                  alt="User"
-                  referrerPolicy="no-referrer"
-                  className="w-10 h-10 rounded-full border-2 border-[#38BDF8] object-cover"
-                  data-tooltip-id="profile-tooltip"
-                  data-tooltip-content={user.displayName || user.email}
-                />
-                {isAdmin && (
-                  <FaUserShield
-                    className="text-xl text-sky-800 -ml-2 drop-shadow"
-                    data-tooltip-id="admin-tooltip"
-                    data-tooltip-content="Admin"
+          // Profile dropdown for desktop
+          <div
+            className="relative"
+            onMouseEnter={() => setIsProfileDropdownOpen(true)}
+            onMouseLeave={() => setIsProfileDropdownOpen(false)}
+          >
+            <button className="flex items-center gap-2 focus:outline-none">
+              {user.photoURL ? (
+                <>
+                  <img
+                    src={user.photoURL}
+                    alt="User"
+                    referrerPolicy="no-referrer"
+                    className="w-10 h-10 rounded-full border-2 border-[#38BDF8] object-cover"
+                    // data-tooltip-id="profile-tooltip"
+                    // data-tooltip-content={user.displayName || user.email}
                   />
-                )}
-                <Tooltip
-                  id="profile-tooltip"
-                  place="bottom"
-                  effect="solid"
-                  className="!bg-[#38BDF8] !text-[#0F172A] !rounded-lg !px-4 !py-2 !font-semibold"
-                />
-                {isAdmin && (
-                  <Tooltip
-                    id="admin-tooltip"
-                    place="bottom"
-                    effect="solid"
-                    className="!bg-sky-800 !text-yellow-400 !rounded-lg !px-4 !py-2 !font-semibold"
+                  {isAdmin && (
+                    <FaUserShield
+                      className="text-xl text-sky-800 -ml-2 drop-shadow"
+                      data-tooltip-id="admin-tooltip"
+                      data-tooltip-content="Admin"
+                    />
+                  )}
+                </>
+              ) : (
+                <>
+                  <FaUserCircle
+                    className="text-3xl text-[#38BDF8]"
+                    data-tooltip-id="profile-tooltip"
+                    data-tooltip-content={user.displayName || user.email}
                   />
-                )}
-              </>
-            ) : (
-              <>
-                <FaUserCircle
-                  className="text-3xl text-[#38BDF8]"
-                  data-tooltip-id="profile-tooltip"
-                  data-tooltip-content={user.displayName || user.email}
-                />
-                {isAdmin && (
-                  <FaUserShield
-                    className="text-xl text-yellow-400 -ml-2 drop-shadow"
-                    data-tooltip-id="admin-tooltip"
-                    data-tooltip-content="Admin"
-                  />
-                )}
-                <Tooltip
-                  id="profile-tooltip"
-                  place="bottom"
-                  effect="solid"
-                  className="!bg-[#38BDF8] !text-[#0F172A] !rounded-lg !px-4 !py-2 !font-semibold"
-                />
-                {isAdmin && (
-                  <Tooltip
-                    id="admin-tooltip"
-                    place="bottom"
-                    effect="solid"
-                    className="!bg-yellow-400 !text-[#0F172A] !rounded-lg !px-4 !py-2 !font-semibold"
-                  />
-                )}
-              </>
+                  {isAdmin && (
+                    <FaUserShield
+                      className="text-xl text-yellow-400 -ml-2 drop-shadow"
+                      data-tooltip-id="admin-tooltip"
+                      data-tooltip-content="Admin"
+                    />
+                  )}
+                </>
+              )}
+            </button>
+            {/* Dropdown */}
+            <AnimatePresence>
+              {isProfileDropdownOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute right-0 mt-2 w-56 bg-white dark:bg-[#223A5E] rounded-xl shadow-lg border border-[#38BDF8]/30 z-50"
+                >
+                  <div className="px-4 py-3 border-b border-[#38BDF8]/20">
+                    <div className="font-bold text-[#0F172A] dark:text-[#38BDF8] flex items-center gap-2">
+                      {user.displayName || user.email}
+                      {isAdmin && <FaUserShield className="text-yellow-400" />}
+                    </div>
+                    <div className="text-xs text-[#38BDF8]">{user.email}</div>
+                  </div>
+                  <ul className="py-2">
+                    <li>
+                      <Link
+                        to="/profile"
+                        className="block px-4 py-2 text-[#0F172A] dark:text-[#D0E7F9] hover:bg-[#38BDF8]/10 dark:hover:bg-[#38BDF8]/20 transition hover:underline"
+                      >
+                        Profile
+                      </Link>
+                    </li>
+                    <li>
+                      <button
+            onClick={handleLogOut}
+            className="border border-[#38BDF8] text-[#38BDF8] px-4 py-1 rounded-xl mx-auto w-full font-semibold hover:bg-[#38BDF8] hover:text-[#0F172A] transition-all duration-200 shadow-sm text-sm"
+          >
+            Logout
+          </button>
+                    </li>
+                  </ul>
+                </motion.div>
+              )}
+            </AnimatePresence>
+            <Tooltip
+              id="profile-tooltip"
+              place="bottom"
+              effect="solid"
+              className="!bg-[#38BDF8] !text-[#0F172A] !rounded-lg !px-4 !py-2 !font-semibold"
+            />
+            {isAdmin && (
+              <Tooltip
+                id="admin-tooltip"
+                place="bottom"
+                effect="solid"
+                className="!bg-sky-800 !text-yellow-400 !rounded-lg !px-4 !py-2 !font-semibold"
+              />
             )}
-          </Link>
+          </div>
         )}
-        {user && (
+        {/* {user && (
           <button
             onClick={handleLogOut}
             className="ml-2 border border-[#38BDF8] text-[#38BDF8] px-4 py-2 rounded-xl font-semibold hover:bg-[#38BDF8] hover:text-[#0F172A] transition-all duration-200 shadow-sm text-sm"
           >
             Logout
           </button>
-        )}
+        )} */}
       </div>
 
       {/* Mobile menu toggle */}

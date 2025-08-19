@@ -20,7 +20,7 @@ const Footer = () => {
       ref={footerRef}
       className="bg-gradient-to-t from-[#38BDF8]/10 via-[#D0E7F9]/70 to-white/30 dark:from-[#0F172A] dark:via-[#38BDF8]/10 dark:to-[#0F172A] transition-colors duration-500 cabin"
     >
-      <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+      <div className="max-w-[1440px] mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
         {/* Logo + Description */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

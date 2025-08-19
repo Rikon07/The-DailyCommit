@@ -8,13 +8,15 @@ import { FaArrowRight } from "react-icons/fa6";
 export default function PremiumArticles() {
   const axiosSecure = useAxiosSecure();
 
-  const { data: articles = [], isLoading } = useQuery({
-    queryKey: ["premium-articles"],
-    queryFn: async () => {
-      const res = await axiosSecure.get("/articles?isPremium=true");
-      return res.data.filter(a => a.status === "approved");
-    },
-  });
+ const { data, isLoading } = useQuery({
+  queryKey: ["premium-articles"],
+  queryFn: async () => {
+    const res = await axiosSecure.get("/articles?isPremium=true");
+    return res.data;
+  },
+});
+const articles = (data?.articles || []).filter(a => a.status === "approved");
+
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-20 cabin">

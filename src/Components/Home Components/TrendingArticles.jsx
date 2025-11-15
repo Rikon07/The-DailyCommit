@@ -9,7 +9,6 @@ import Skeleton from "react-loading-skeleton";
 import { motion } from "framer-motion";
 import { FaCrown } from "react-icons/fa6";
 import { Eye } from "lucide-react";
-import { Tooltip } from "react-tooltip";
 import { useRef, useEffect } from "react";
 import gsap from "gsap";
 export default function TrendingArticles({ userInfo }) {
@@ -193,7 +192,7 @@ const trending = [...articles]
                           {article.views || 0}
                         </span>
                       </div>
-                      <div className="mt-auto">
+                      <div className="mt-auto relative group">
                         <Link
                           to={canView ? `/articles/${article._id}` : "#"}
                           className={`px-4 py-1 rounded-lg text-sm font-semibold transition text-center w-full block ${
@@ -203,26 +202,23 @@ const trending = [...articles]
                           }`}
                           tabIndex={canView ? 0 : -1}
                           aria-disabled={!canView}
-                          data-tooltip-id={
-                            canView
-                              ? undefined
-                              : `premium-tooltip-${article._id}`
-                          }
-                          data-tooltip-content={
-                            canView
-                              ? undefined
-                              : "Only premium users can view premium articles"
-                          }
                         >
                           Details
                         </Link>
                         {!canView && (
-                          <Tooltip
-                            id={`premium-tooltip-${article._id}`}
-                            place="top"
-                            effect="solid"
-                            className="!bg-[#38BDF8] !text-[#0F172A] !rounded-lg !px-4 !py-2 !font-semibold"
-                          />
+                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-20">
+                            <div className="bg-white/90 dark:bg-[#223A5E]/90 backdrop-blur-sm text-gray-700 dark:text-white border border-[#38BDF8] shadow-lg rounded-lg p-3 w-52 text-center">
+                              <p className="text-xs mb-2">
+                                Be premium to view this article
+                              </p>
+                              <Link
+                                to="/subscription"
+                                className="px-3 py-1 text-sm rounded-md bg-[#38BDF8] text-white hover:bg-[#0EA5E9] transition inline-block"
+                              >
+                                Get Premium
+                              </Link>
+                            </div>
+                          </div>
                         )}
                       </div>
                     </div>

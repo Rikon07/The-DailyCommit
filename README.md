@@ -52,7 +52,6 @@ Built with React, Tailwind CSS, Express, MongoDB, Firebase Auth, Stripe, and mor
 ## 🔥 More
 
 - 🔐 Secure Firebase Authentication (Email/Pass + Google)
-- 📦 Borrow & Return Books System (Limited to 3 books per user)
 - 🌐 Fully Responsive Layout
 - 💬 SweetAlert2 Feedback for User Actions
 - 🎞️ Carousel + Animated Banner Section

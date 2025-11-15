@@ -128,10 +128,22 @@ const router = createBrowserRouter([
       </PrivateRoute>
     ),
     children: [
-      { index: true, Component: DashboardHome }, // charts
-      { path: "users", Component: AllUsers },
-      { path: "articles", Component: AllArticles },
-      { path: "publishers", Component: AddPublisher },
+      { 
+        index: true, 
+        Component: DashboardHome 
+      },
+      { 
+        path: "users", 
+        Component: AllUsers 
+      },
+      { 
+        path: "articles", 
+        Component: AllArticles 
+      },
+      { 
+        path: "publishers", 
+        Component: AddPublisher 
+      },
     ],
   },
 ]);

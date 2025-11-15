@@ -77,17 +77,42 @@ const saveUserToDB = async (user) => {
     await saveUserToDB(result.user);
     await checkAndExpirePremium(result.user.email);
     
-    
-    navigate(location.state?.from || "/", { replace: true });
     showAlert("Welcome Back!", `Logged in as ${result.user.displayName}`, "success");
-    setLoading(false);
+    navigate(location.state?.from || "/", { replace: true });
+    // Don't set loading to false on success - let navigation handle unmount
     
-  } catch (err) {
+  } catch (error) {
+    console.error("Login error:", error);
     setError("Wrong credentials. Please try again.");
-    setLoading(false);
     showAlert("Login Failed", "Wrong Credentials", "error");
+    setLoading(false);
   }
 };
+
+  const handleDemoLogin = async (email, password) => {
+    const form = document.querySelector('form');
+    form.email.value = email;
+    form.password.value = password;
+    
+    setLoading(true);
+    setError("");
+    try {
+      const result = await signIn(email, password);
+      const token = await result.user.getIdToken();
+      localStorage.setItem("access-token", token);
+      await saveUserToDB(result.user);
+      await checkAndExpirePremium(result.user.email);
+      
+      showAlert("Welcome Back!", `Logged in as ${result.user.displayName}`, "success");
+      navigate(location.state?.from || "/", { replace: true });
+      
+    } catch (error) {
+      console.error("Demo login error:", error);
+      setError("Demo login failed. Please try again.");
+      showAlert("Login Failed", "Demo login failed", "error");
+      setLoading(false);
+    }
+  };
 
   const handleGoogleLogin = async () => {
     setLoading(true);
@@ -97,10 +122,10 @@ const saveUserToDB = async (user) => {
       await checkAndExpirePremium(result.user.email);
       showAlert("Welcome!", `Logged in as ${result.user.displayName}`, "success");
       navigate(location.state?.from || "/", { replace: true });
+      // Don't set loading to false on success - let navigation handle unmount
     } catch (error) {
       setError(error.message);
       showAlert("Oops!", "Google sign-in failed", "error");
-    } finally {
       setLoading(false);
     }
   };
@@ -162,13 +187,37 @@ const saveUserToDB = async (user) => {
 
         <button
           type="submit"
-          className="w-full bg-[#38BDF8] hover:bg-[#0ea5e9] text-white p-2 rounded-md transition"
+          disabled={loading}
+          className="w-full bg-[#38BDF8] hover:bg-[#0ea5e9] text-white p-2 rounded-md transition disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Login
+          {loading ? "Logging in..." : "Login"}
         </button>
 
+        {/* Demo Login Buttons */}
+        <div className="space-y-2">
+          <p className="text-xs text-center text-slate-500 dark:text-slate-400">For Quick Login, Click below</p>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => handleDemoLogin("lamine.yamal@gmail.com", "@Lamine12345")}
+              disabled={loading}
+              className="flex-1 bg-gradient-to-r from-[#0F172A] via-[#1E293B] to-[#334155] hover:from-[#0ea5e9] hover:via-[#94accc] hover:to-[#38BDF8] text-white text-sm p-2 rounded-md transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+            >
+              Login as User
+            </button>
+            <button
+              type="button"
+              onClick={() => handleDemoLogin("rik.shelby@gmail.com", "@Shelby12345")}
+              disabled={loading}
+              className="flex-1 bg-gradient-to-r from-[#0F172A] via-[#1E293B] to-[#334155] hover:from-[#0ea5e9] hover:via-[#2c4566] hover:to-[#38BDF8] text-white text-sm p-2 rounded-md transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+            >
+              Login as Admin
+            </button>
+          </div>
+        </div>
+
         <div className="text-center text-sm text-slate-600 dark:text-slate-300">
-          Don’t have an account? <Link to="/register" className="text-[#38BDF8] font-medium">Register</Link>
+          Don't have an account? <Link to="/register" className="text-[#38BDF8] font-medium">Register</Link>
         </div>
 
         <div className="flex items-center gap-3 justify-center">

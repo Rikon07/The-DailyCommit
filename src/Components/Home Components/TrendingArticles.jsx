@@ -229,6 +229,7 @@ const trending = [...articles]
           </Swiper>
         )}
       </section>
+      <div></div>
     </div>
   );
 }
